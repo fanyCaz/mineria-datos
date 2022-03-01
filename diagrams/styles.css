@@ -1,5 +1,6 @@
 div {
-  background-color: green;
+  border-color: green;
+  border: solid;
   width: 150px;
   height: 150px;
   border-radius: 50%;
