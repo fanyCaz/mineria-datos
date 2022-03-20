@@ -3,23 +3,23 @@ import numpy as np
 
 import math
 
-o_df = pd.read_csv(f'/content/drive/MyDrive/FIME/NOVENO/MINERIA_DATOS/LABORATORIO/Practica5/combinaciones/combinacion_23.csv')
+o_df = pd.read_csv(f'/MINERIA_DATOS/LABORATORIO/Practica5/combinaciones/combinacion_23.csv')
 total_instances = len(o_df)
 
 # Ranges for numerical values
 # Quantiles to get ranges
-i_q1= csv_0['Income'].quantile(0.25)
-i_q2 = csv_0['Income'].quantile(0.5)
-i_q3 = csv_0['Income'].quantile(0.75)
-i_q4 = csv_0['Income'].max()
+i_q1= o_df['Income'].quantile(0.25)
+i_q2 = o_df['Income'].quantile(0.5)
+i_q3 = o_df['Income'].quantile(0.75)
+i_q4 = o_df['Income'].max()
 i_quantiles = [i_q1,i_q2,i_q3,i_q4]
-a_q1 = csv_0['Age'].quantile(0.25)
-a_q2 = csv_0['Age'].quantile(0.5)
-a_q3 = csv_0['Age'].quantile(0.75)
-a_q4 = csv_0['Age'].max()
+a_q1 = o_df['Age'].quantile(0.25)
+a_q2 = o_df['Age'].quantile(0.5)
+a_q3 = o_df['Age'].quantile(0.75)
+a_q4 = o_df['Age'].max()
 a_quantiles = [a_q1,a_q2,a_q3,a_q4]
-house_own_types = csv_0['House_Ownership'].unique()
-profession_types = csv_0['Profession'].unique()
+house_own_types = o_df['House_Ownership'].unique()
+profession_types = o_df['Profession'].unique()
 
 entropies_incomes = []
 entropies_age = []
@@ -48,7 +48,7 @@ min = 0
 for idx,i_q in enumerate(i_quantiles):
   if idx > 0:
     min = i_quantiles[idx-1]
-  branch = ipha.query(f'Income > {min} & Income <= {i_q}')
+  branch = o_df.query(f'Income > {min} & Income <= {i_q}')
   branch_incomes.append(branch)
   probability = len(branch) / total_instances
   entropies_incomes.append( -probability*math.log10(probability) )
@@ -87,8 +87,6 @@ for branch in branch_hown:
     if probability > 0:
       entropies_profession.append( -probability*math.log10(probability) )
 len(entropies_profession)
-
-iaph = csvs[0]
 
 #AGE -> PROFESSION
 for branch in branch_ages:
@@ -234,7 +232,7 @@ for prof in profession_types:
     entropies_profession.append( -probability*math.log10(probability) )
 len(entropies_profession)
 
-f = open('/content/drive/MyDrive/FIME/NOVENO/MINERIA_DATOS/LABORATORIO/Practica5/final_entropies.txt', 'a')
+f = open('/MINERIA_DATOS/LABORATORIO/Practica5/final_entropies.txt', 'a')
 f.write(f'Entropy for Profession-House_Ownership-Age-Income: {category_entropies} H/S \n')
 f.close()
 
