@@ -15,7 +15,7 @@ slope(matrix[:,0])
 m,b = slope(matrix[:,1])
 adjusted = adjustment(m,b,matrix[:,1])
 
-number_klusters = 3
+number_klusters = 4
 
 data = np.concatenate([[0.3*np.random.randn(2) for i in range(200)],[[1,1] + 0.3*np.random.randn(2) for i in range(200)], [[1,-1]+0.3*np.random.randn(2) for i in range(200)]])
 
