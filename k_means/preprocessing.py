@@ -7,5 +7,17 @@ def calculate_distances(matrix, center: float, bias: float) -> list:
 
 def bias(column: list, center: float) -> list:
   biases = list(map(lambda value: math.pow(value-center,2),column ))
-  print(biases)
   return biases
+
+def slope(column: list,y0: int = 0, y1: int = 1):
+  x0 = min(column)
+  x1 = max(column)
+  m = (y1-y0)/(x1 - x0)
+  b = -m*x0
+  return m,b
+
+def adjustment(m: int,b: int, originals: list):
+  adjusted = list(map(lambda original: m*original+b,originals))
+  return adjusted
+
+
