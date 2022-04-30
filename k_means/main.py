@@ -27,14 +27,12 @@ print(f"Para {len(centers)} centros, el mejor objetivo logrado fue : {j_objectiv
 print("Los centros son:")
 print(centers)
 
-centers = np.array([[0,0],[1,1],[0.5,0.5]])
+centers = np.array([[0,0],[1,1],[0,1],[1,0]])
 j_objective = 0
 j_ant = sys.maxsize
 while True:
   distances = calculate_distances(norm_matrix,centers)
   centers, j_objective = new_centroids(distances,centers,norm_matrix,j_ant)
-  if True:
-    break
   if math.isclose(j_objective,j_ant,rel_tol=0.00001):
     break
   else:
