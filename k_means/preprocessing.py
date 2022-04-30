@@ -27,7 +27,7 @@ def new_centroids(distances,centers,original,j_original):
   new_centroids_calc = np.array(new_centroids_calc) 
 
   if math.isclose(j_original,j_obj,rel_tol=0.00001):
-    return centers,j_original
+    return centers,j_original, new_centroids_calc
 
   new_centroids = []
   for idx,center in enumerate(centers):
@@ -36,7 +36,7 @@ def new_centroids(distances,centers,original,j_original):
     centroid.append( (center[1] + sum(list(map(lambda x,y: x*y,original[:,1],new_centroids_calc[:,idx])))) / (sums_centers[idx] +1)  )
     new_centroids.append( centroid )
   new_centroids = np.array(new_centroids)
-  return new_centroids,j_obj 
+  return new_centroids,j_obj, new_centroids_calc
 
 def slope(column: list,y0: float = 0, y1: float = 1):
   x0 = min(column)
