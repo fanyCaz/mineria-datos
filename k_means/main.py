@@ -2,6 +2,8 @@ from preprocessing import calculate_distances, normalize, slope, new_centroids
 from kmeans import run 
 import numpy as np
 import pandas as pd
+import math
+import sys
 from refining import refine
 
 matrix = pd.read_csv('hoax.csv')
@@ -11,40 +13,33 @@ norm_matrix = normalize(matrix)
 
 centers = np.array([[0,0],[1,1]])
 
-distances = calculate_distances(norm_matrix,centers)
-new_centroids(distances,centers)
-#for center in centers:
-#  distances.append( calculate_distances(norm_matrix,center) )
+j_objective = 0
+j_ant = sys.maxsize
+while True:
+  distances = calculate_distances(norm_matrix,centers)
+  centers, j_objective = new_centroids(distances,centers,norm_matrix,j_ant)
+  if math.isclose(j_objective,j_ant,rel_tol=0.00001):
+    break
+  else:
+    j_ant = j_objective
 
+print(f"Para {len(centers)} centros, el mejor objetivo logrado fue : {j_objective}")
+print("Los centros son:")
+print(centers)
 
-#result = calculate_distances(matrix,center,88)
-#print(result)
-#bias(matrix[:,0],centers[0])
-#bias(matrix[:,1],88)
-
-#m,b = slope(matrix[:,0])
-#norm_data1 = normalize(matrix[:,0],m,b)
-#m,b = slope(matrix[:,1])
-#norm_data2 = normalize(matrix[:,1],m,b)
-
-#m = np.array([norm_data1,norm_data2])
-
-#d = calculate_distances(m,centers[0])
-#print( d )
-#d = calculate_distances(m,centers[1])
-#print( d )
-
-#number_klusters = 4
-
-# our take
-#data = np.concatenate([[0.3*np.random.randn(2) for i in range(200)],[[1,1] + 0.3*np.random.randn(2) for i in range(200)], [[1,-1]+0.3*np.random.randn(2) for i in range(200)]])
-
-#centroids = data[:number_klusters]
-#result = run(data, centroids)
-
-#print( result )
-
-# refinenment
-
-#refine(1,data,number_klusters,2)
+centers = np.array([[0,0],[1,1],[0.5,0.5]])
+j_objective = 0
+j_ant = sys.maxsize
+while True:
+  distances = calculate_distances(norm_matrix,centers)
+  centers, j_objective = new_centroids(distances,centers,norm_matrix,j_ant)
+  if True:
+    break
+  if math.isclose(j_objective,j_ant,rel_tol=0.00001):
+    break
+  else:
+    j_ant = j_objective
+print(f"Para {len(centers)} centros, el mejor objetivo logrado fue : {j_objective}")
+print("Los centros son:")
+print(centers)
 

@@ -12,18 +12,31 @@ def calculate_distances(matrix, centers) -> list:
   distances = np.array(distances)
   return distances
 
-def new_centroids(distances,centers):
-  min_indexes_distances = np.argmin(distances,axis=1)
-  print( np.amin(distances,axis=1) )
-  min_distances = np.amin(distances,axis=1)
-  temp = []
+def new_centroids(distances,centers,original,j_original):
+  new_centroids_calc = [] 
+  sums_centers = np.zeros( len(centers) )
+  j_obj = 0
   for idx,row in enumerate(distances):
-    for c_temp in enumerate(centers):
-      value = [ min_distances[idx] == c_temp]
-      print( value) 
+    temp = []
+    min_value = min(row)
+    j_obj += min_value
+    for jdx,c_temp in enumerate(centers):
+      temp.append( 1 if min_value == row[jdx] else 0 )
+      sums_centers[jdx] += ( 1 if min_value == row[jdx] else 0 )
+    new_centroids_calc.append( temp )
+  new_centroids_calc = np.array(new_centroids_calc) 
 
-  sum_indexes = sum(min_indexes_distances)
-  return
+  if math.isclose(j_original,j_obj,rel_tol=0.00001):
+    return centers,j_original
+
+  new_centroids = []
+  for idx,center in enumerate(centers):
+    centroid = []
+    centroid.append( (center[0] + sum(list(map(lambda x,y: x*y,original[:,0],new_centroids_calc[:,idx])))) / (sums_centers[idx] +1)  )
+    centroid.append( (center[1] + sum(list(map(lambda x,y: x*y,original[:,1],new_centroids_calc[:,idx])))) / (sums_centers[idx] +1)  )
+    new_centroids.append( centroid )
+  new_centroids = np.array(new_centroids)
+  return new_centroids,j_obj 
 
 def slope(column: list,y0: float = 0, y1: float = 1):
   x0 = min(column)
