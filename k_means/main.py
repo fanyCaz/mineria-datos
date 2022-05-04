@@ -1,11 +1,9 @@
-from preprocessing import calculate_distances, normalize, slope, new_centroids
-from kmeans import run 
+from preprocessing import calculate_distances, normalize, new_centroids
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import math
 import sys
-from refining import refine
 
 def centroids_belonging(belonging: list):
   identifiers = ['A','B','C','D','E','F','G','H','I','J'] 
@@ -33,7 +31,6 @@ def kmeans(norm_matrix,centers):
   print(f"Para {len(centers)} centros, el mejor objetivo logrado fue : {j_objective}")
   print("Los centros son:")
   print(centers)
-  print(belonging)
 
   elements = centroids_belonging(belonging)
   print("Elementos de cada centroide")
@@ -42,7 +39,10 @@ def kmeans(norm_matrix,centers):
 matrix = pd.read_csv('hoax.csv')
 matrix = np.array(matrix)
 norm_matrix = normalize(matrix)
-centers = np.array([[0,0],[1,1]])
+#centers = np.array([[0,0],[1,1]])
+#centers = np.array([[0,0],[1,1],[0.5,0.5]])
 #centers = np.array([[0,0],[1,1],[0,1],[1,0]])
+#centers = np.array([[0,0],[1,1],[0,1],[1,0],[0.5,0.5]])
+centers = np.array([[0,0],[1,1],[0,1],[1,0],[0.5,0.5],[0.2,0.2]])
 
 kmeans(norm_matrix,centers)
