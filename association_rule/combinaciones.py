@@ -5,8 +5,9 @@ from itertools import permutations
 data = pd.read_csv("ejemplo.csv")
 
 variables = data.columns.values
-rule_combinations = list(permutations(variables,2))
-print( rule_combinations)
+
+variable_combinations = list(permutations(variables,2))
+print( variable_combinations)
 
 grouping = {}
 for i in variables:
@@ -17,22 +18,35 @@ for i in variables:
     q4 = data[i].max()
     grouping[i] = {'g_type': 'number', 'elements': [q1,q2,q3,q4] }
   else:
-    grouping[i] = {'g_type': 'category', 'elements': list(set(data[i])) }
+    grouping[i] = {'g_type': 'category', 'elements': data[i].unique() }
 
-print(grouping)
+rule_if =  variable_combinations[0][0] 
+rule_then = variable_combinations[0][1]
 
-print( rule_combinations[0] )
+for idx,variable in enumerate(variable_combinations):
+  rule_if = variable[0]
+  rule_then = variable[1]
+  print(f'if {rule_if} then {rule_then}')
+  print(f'{rule_if} = {grouping[rule_if]["elements"][0]}')
 
-f =  rule_combinations[0][0] 
-print(data[f])
+  for i in grouping[rule_if]["elements"]:
+    print(i)
+    for j in grouping[rule_then]["elements"]:
+      print(j)
 
-# si el grupo es int64, entonces hacer variable bool de es menor a q1? y asi por las 4, y luego si no es entonces variable bool de es igual el valor a el elemento 0?
+  if grouping[rule_if]["g_type"] == "number":
+    if_data = data.query(f'{rule_if} <= {grouping[rule_if]["elements"][0]}')
+    # llamar a función que haga ciclo entre todos los elementos
+  else:
+    if_data = data.query(f'{rule_if} == "{grouping[rule_if]["elements"][0]}"')
+  if grouping[rule_then]["g_type"] == "number":
+    then_data = if_data.query(f'{rule_then} <= {grouping[rule_then]["elements"][0]}')
+  else:
+    then_data = if_data.query(f'{rule_then} == "{grouping[rule_then]["elements"][0]}"')
+  print( len(then_data) )
+
+
+# llamar a función que haga ciclo entre todos los elementos
 # después solo contar los que cumplan con ambos, con uno de cada uno y el total de elementos
-# pregunta: los cuantiles valen como suficiente para dividir los datos?
-"""
-for combinacion in perm:
-  combinacion =list(combinacion)
-  datos_comb=datos[combinacion]
-  contador=contador+1
-"""
+# pregunta: los cuantiles valen como suficiente para dividir los datos? Si es suficiente para las variables que son como continuas, se dejará así para el sake del programa
 
