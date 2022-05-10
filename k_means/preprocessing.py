@@ -6,8 +6,8 @@ def calculate_distances(matrix, centers) -> list:
   for idx,row in enumerate(matrix):
     temp = []
     for center in centers:
-      value = math.sqrt( math.pow(center[0] - row[0],2) + math.pow(center[1] - row[1],2) )
-      temp.append(value)
+      dist = math.dist(row,center)
+      temp.append(dist)
     distances.append( temp )
   distances = np.array(distances)
   return distances
