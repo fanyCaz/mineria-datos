@@ -26,14 +26,14 @@ def new_centroids(distances,centers,original,j_original):
     new_centroids_calc.append( temp )
   new_centroids_calc = np.array(new_centroids_calc) 
 
-  if math.isclose(j_original,j_obj,rel_tol=0.00001):
+  if math.isclose(j_original,j_obj,rel_tol=0.0001):
     return centers,j_original, new_centroids_calc
 
   new_centroids = []
   for idx,center in enumerate(centers):
     centroid = []
-    centroid.append( (center[0] + sum(list(map(lambda x,y: x*y,original[:,0],new_centroids_calc[:,idx])))) / (sums_centers[idx] +1)  )
-    centroid.append( (center[1] + sum(list(map(lambda x,y: x*y,original[:,1],new_centroids_calc[:,idx])))) / (sums_centers[idx] +1)  )
+    for jdx, element in enumerate(center):
+      centroid.append( (element + sum(list(map(lambda x,y: x*y,original[:,jdx], new_centroids_calc[:,idx])))) / (sums_centers[idx] +1) )
     new_centroids.append( centroid )
   new_centroids = np.array(new_centroids)
   return new_centroids,j_obj, new_centroids_calc
