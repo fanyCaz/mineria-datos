@@ -55,12 +55,13 @@ def read_data(file_name):
 
 matrix = read_data('segmentation_paper.csv')
 matrix = np.array(matrix)
+matrix = matrix.astype('float64')
 #print(matrix)
 norm_matrix = normalize(matrix)
-centers = np.array([[0,0,0],[1,1,1]])
+#centers = np.array([[0,0,0],[1,1,1]])
 #centers = np.array([[0,0,0],[1,1,1],[0.5,0.5,0.5]])
 #centers = np.array([[0,0,0],[1,1,1],[0,1,1],[1,0,1]])
 #centers = np.array([[0,0,0],[1,1,1],[0,1,1],[1,0,0],[0.5,0.5,0.5]])
-#centers = np.array([[0,0,0],[1,1,1],[0,1,1],[1,0,1],[0.5,0.5,0.5],[0.2,0.2,0.2]])
+centers = np.array([[0,0,0],[1,1,1],[0,1,1],[1,0,1],[0.5,0.5,0.5],[0.2,0.2,0.2]])
 
 kmeans(norm_matrix,centers)
