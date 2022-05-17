@@ -10,7 +10,8 @@ def refine(initial_start_point, data, k, num_subsamples=2):
   print(f'centros iniciales {initial_start_point}')
   #limit = np.random.randint(1,len(data)/2)
   max_rows = 5
-  for i in range(num_subsamples):
+  #for i in range(num_subsamples):
+  for i in range(2):
     #s_i = np.random.choice(flatten_data, limit)
     rand_start = np.random.randint(1,max_rows)
     s_i = data[rand_start:rand_start+max_rows]
@@ -54,15 +55,19 @@ def kmeansMod(start_point,sample,k):
     if math.isclose(j_objective,j_ant,rel_tol=0.0001):
       print("Pertenencia")
       print(belonging)
+      print("Los centros ANTES DE  son:")
+      print(centers)
       empty_cluster = any([ sum(belonging[:,i]) == 0 for i in range(len(belonging[0])) ])
       if empty_cluster:
-        # los centroides iniciales se cambian a que sean los elementos que están más lejandos de su centro cluster asignado
-        # osea, que busco un elemento que esté lejano a su centroide, y se lo asigno a el centro que no tenia valores,y ese elemento lejano va a ser mi nuevo centroide estimado
         print(f'distancias \n{distances}')
         # deben ser los maximos
-        mini = np.min(distances)
-        min_w = np.argmin(distances)
-        print(f'minims {mini} y min_w')
+        mini = np.max(distances)
+        farthest_distances = np.argmax(distances,axis=1)
+        print(f'minims {mini} y {farthest_distances}')
+        print(f'del sample {sample[farthest_distances[0]]}')
+        for idx, center in enumerate(centers):
+          if sum(belonging[:,idx]) == 0:
+            centers[idx] = sample[farthest_distances[idx]]
       break
     else:
       j_ant = j_objective
@@ -73,7 +78,7 @@ def kmeansMod(start_point,sample,k):
   elements = centroids_belonging(belonging)
   print("Elementos de cada centroide")
   print(elements)  
-  return elements
+  return elements, centers
 
 def centroids_belonging(belonging: list):
   identifiers = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V']
