@@ -42,4 +42,8 @@ for idx,variable in enumerate(variable_combinations):
       query = f'{rule_then} > {min_q_j} & {rule_then} <= {element_then}' if grouping[rule_then]["g_type"] == "number" else f'{rule_then} == "{element_then}"' 
       then_data = if_data.query(query)
       print( len(then_data) )
+      df = pd.DataFrame(rule_then, columns = ['first_name', 'last_name'])
+      df.to_csv('example.csv')
+
+
 
