@@ -5,6 +5,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import math
 
+# una vez obtenido el scalar de distortion entonces ya se puede aplicar kmeans a toda la base de datos, 
+# esta parte primero hay que guardar los centros en un txt y de ahi los leo para kmeans general
 def read_data(file_name):
   matrix = []
   debug = True
