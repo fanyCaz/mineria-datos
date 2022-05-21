@@ -17,9 +17,8 @@ def refine(initial_start_point, data, k, num_subsamples=1):
     save = {'elements': s_i, 'centers': centers}
     cm.append(save)
   fms = []
-  #print("primeros resultados")
-  #print(cm)
-  """
+  print("primeros resultados")
+  print(cm)
   centers = cm[0]['centers']
   for j in range(num_subsamples):
     elements, centers, j_obj, belonging = kmeans(cm[j]['elements'],centers)
@@ -27,7 +26,6 @@ def refine(initial_start_point, data, k, num_subsamples=1):
     fms.append(save)
   print("resultados despues")
   print(fms)
-  """
   return
 
 def kmeans(norm_matrix,centers):
@@ -58,28 +56,28 @@ def kmeansMod(start_point,sample,k):
     distances = calculate_distances(sample,centers)
     centers, j_objective, belonging = new_centroids(distances,centers,sample,j_ant)
     if math.isclose(j_objective,j_ant,rel_tol=0.0001):
-      # creo que verificar empty_cluster no es necesario
-      empty_cluster = any([ sum(belonging[:,i]) == 0 for i in range(len(belonging[0])) ])
+      elements = centroids_belonging(belonging, distances)
+      empty_cluster = len(elements) != len(centers)
       if empty_cluster:
-        elements = centroids_belonging(belonging, distances)
-        farthest_distances = np.argmax(distances,axis=1)
-        farthest_distance = []
-        for w in elements:
-          # de todos estos elementos, obtener el de mayor distancia a su cluster, y obtener la coordenada de ese elemento
-          wat =  [ (r['idx'],r['distance']) for r in elements[w] ]
-          max_distance = np.argmax([ r['distance'] for r in elements[w] ])
-          print(f'{max_distance} y {np.max([r["distance"] for r in elements[w]] )} ')
-          print(f'donde anda {w} --{wat} ')
-          farthest_distance.append(max_distance)
-        for idx, center in enumerate(centers):
-          if sum(belonging[:,idx]) == 0:
-            centers[idx] = sample[farthest_distances[idx]]
+        centers = update_empty_centers(centers,belonging,elements,sample)
       break
     else:
       j_ant = j_objective
 
   elements = centroids_belonging(belonging, distances)
   return elements, centers, j_objective, belonging
+
+def update_empty_centers(centers, belonging,elements,sample):
+  farthest_distance = []
+  # find farthest element from non empty clusters
+  for idx,element in enumerate(elements):
+    max_distance_idx = np.argmax(list(map(lambda values: values['distance'],elements[element] )))
+    farthest_distance.append( sample[ elements[element][max_distance_idx]['idx'] ] )
+  for idx, center in enumerate(centers):
+    if sum(belonging[:,idx]) == 0:
+      centers[idx] = farthest_distance[0]
+      break
+  return centers
 
 def centroids_belonging(belonging: list, distances: list):
   identifiers = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V']
