@@ -1,4 +1,4 @@
-from preprocessing import calculate_distances, normalize, new_centroids
+from preprocessing import calculate_distances, normalize, new_centroids, calculate_distortion
 import numpy as np
 from numpy import ndarray as nd
 import sys
@@ -26,6 +26,9 @@ def refine(initial_start_point, data, k, num_subsamples=1):
     fms.append(save)
   print("resultados despues")
   print(fms)
+
+  print("Distortion")
+  distortion(fms,cm)
   return
 
 def kmeans(norm_matrix,centers):
@@ -96,7 +99,9 @@ def centroids_belonging(belonging: list, distances: list):
   return elements
 
 def distortion(fm,cm):
+  dis = []
   for jdx,elements in enumerate(fm):
-    calculate_distances(fm[jdx]['elements'],cm[jdx]['centers'])
-  calculate_distances(matrix,centers)
+    dis.append( calculate_distances(fm[jdx]['elements'],cm[jdx]['centers']) )
+  calculate_distortion(fm[0]['elements'],fm[0]['centers'])
+  calculate_distortion(cm[0]['elements'],cm[0]['centers'])
 
