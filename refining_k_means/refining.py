@@ -4,6 +4,9 @@ from numpy import ndarray as nd
 import sys
 import math
 
+
+    
+
 def refine(initial_start_point, data, k, num_subsamples=1):
   cm = []
   flatten_data = nd.flatten(data)
