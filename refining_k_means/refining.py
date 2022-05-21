@@ -41,7 +41,6 @@ def kmeans(norm_matrix,centers):
       break
     else:
       j_ant = j_objective
-
   elements = centroids_belonging(belonging, distances)
   return elements, centers, j_objective, belonging
 
@@ -63,19 +62,24 @@ def kmeansMod(start_point,sample,k):
       break
     else:
       j_ant = j_objective
-
   elements = centroids_belonging(belonging, distances)
   return elements, centers, j_objective, belonging
 
 def update_empty_centers(centers, belonging,elements,sample):
   farthest_distance = []
   # find farthest element from non empty clusters
+  farthest_element = 0
+  max_distance = 0
   for idx,element in enumerate(elements):
     max_distance_idx = np.argmax(list(map(lambda values: values['distance'],elements[element] )))
-    farthest_distance.append( sample[ elements[element][max_distance_idx]['idx'] ] )
+    current_distance = elements[element][max_distance_idx]['distance']
+    if current_distance > max_distance:
+      farthest_element = sample[elements[element][max_distance_idx]['idx']]
+      max_distance = current_distance
+
   for idx, center in enumerate(centers):
     if sum(belonging[:,idx]) == 0:
-      centers[idx] = farthest_distance[0]
+      centers[idx] = farthest_element
       break
   return centers
 
