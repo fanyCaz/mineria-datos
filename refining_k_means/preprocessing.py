@@ -3,11 +3,10 @@ import math
 
 def calculate_distortion(matrix: list, centers: list) -> int:
   current_distortion = 0
-  for center in centers:
-    aqui = np.array(list(map(lambda value: value-center, matrix)))
-    aqui = sum([ sum(value) for value in aqui ** 2 ] )
-    print(f"aqui {aqui}")
-  return
+  for idx,center in enumerate(centers):
+    sum_column = sum( np.array( matrix[idx] - center ) ** 2 )
+    current_distortion += sum_column
+  return current_distortion
 
 def calculate_distances(matrix, centers) -> list:
   distances = []
