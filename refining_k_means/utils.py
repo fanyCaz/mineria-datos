@@ -8,8 +8,8 @@ def imprimir_matriz(nombre, matriz):
         archi.writelines("Matriz:\n")
         archi.writelines(f"{matriz}")
 
-def generador(numero_centros,numero_coordenadas):
-  centros=np.random.rand(numero_centros, numero_coordenadas)
+def generador(numero_centros):
+  centros=np.random.rand(numero_centros)
   return centros.tolist()
 
 
