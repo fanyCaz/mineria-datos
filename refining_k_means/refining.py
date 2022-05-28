@@ -108,3 +108,11 @@ def distortion(fm,cm):
   calculate_distortion(fm[0]['elements'],fm[0]['centers'])
   calculate_distortion(cm[0]['elements'],cm[0]['centers'])
 
+def validateSample(sample):
+
+  cont = 0
+  for i in enumerate(sample):
+    for j in sample[i]
+      cont = cont + 1
+    print("Sample {i}, numero de elementos: {cont}")
+
