@@ -28,8 +28,8 @@ def read_data(file_name):
   return matrix
 
 def input_normalized(question: str, extra_constraint=None):
-  centers_iniciales = input(question)
   question='Ingresa el numero de centros'
+  centers_iniciales = input(question)
   try:
     if int(centers_iniciales) < 0:
       print('Ingresa el numero de centros')
@@ -59,7 +59,7 @@ print(norm_matrix)
 
 
 
-centers = generador(centro)
+centers = generador(centro, 3)
 k = len(centers)
 #kmeans(norm_matrix,centers)
 refine(centers,norm_matrix,k)
