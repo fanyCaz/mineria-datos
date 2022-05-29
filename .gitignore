@@ -3,4 +3,7 @@ include/
 share/
 lib/
 lib64
+*.cfg
 *.pyc
+*.csv
+*.txt

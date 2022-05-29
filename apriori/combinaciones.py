@@ -3,6 +3,7 @@ import pandas as pd
 from itertools import permutations
 from apriori import apriori
 from metric_rules import support, confidence, lift
+from utils import input_normalized, imprimir_matriz
 
 def read_data():
   data = pd.read_csv("registros.csv")
@@ -11,6 +12,8 @@ def read_data():
 
 def create_combinations(data,variables):
   variable_combinations = list(permutations(variables,2))
+  print("Combinación de variables")
+  print(variable_combinations)
 
   grouping = {}
   for i in variables:
@@ -22,6 +25,8 @@ def create_combinations(data,variables):
       grouping[i] = {'g_type': 'number', 'elements': [q1,q2,q3,q4] }
     else:
       grouping[i] = {'g_type': 'category', 'elements': data[i].unique() }
+  print("Agrupaciones")
+  print(grouping)
 
   return variable_combinations,grouping
 
@@ -65,15 +70,16 @@ def generate_rules(data,combinations,grouping):
         l = lift(total_elements,n_if,n_then,n_both)
         metrics_a.append( {'rule': f'{query_if}:{query_then}', 's': s, 'c': c, 'l': l} )
     metrics_a.append(metrics)
-  print(metrics_a)
+  imprimir_matriz('rules',metrics_a)
   return metrics_a
 
 def main():
   data, variables = read_data()
   variable_combinations, grouping = create_combinations(data,variables)
   metrics = generate_rules(data,variable_combinations,grouping)
-  minsup = 0.15
-  apriori(metrics, minsup, data,variables)
+  minsup = input_normalized('Escribe el support mínimo a cumplir:',[0,1])
+  final_rules = apriori(metrics, minsup, data,variables)
+  imprimir_matriz('final_rules',final_rules)
 
 if __name__  == '__main__':
   main()
