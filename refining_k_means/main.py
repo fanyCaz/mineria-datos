@@ -25,7 +25,8 @@ def read_data(file_name):
 matrix = read_data('segmentation_paper.csv')
 matrix = np.array(matrix,dtype = 'float64')
 length_df = len(matrix[0])
-number_centroids = input_normalized('Ingresa el numero de centros: ',[1,length_df])
+print(length_df)
+number_centroids = input_normalized('Ingresa el numero de centros: ',[1,100]) # 100 es límite por ahora
 
 norm_matrix = normalize(matrix)
 #centers = np.array([[0,0,0],[1,1,1]])
