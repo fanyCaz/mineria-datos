@@ -102,6 +102,8 @@ def distortion(fm,cm):
   dis = []
   for jdx,elements in enumerate(fm):
     dis.append( calculate_distances(fm[jdx]['elements'],cm[jdx]['centers']) )
-  calculate_distortion(fm[0]['elements'],fm[0]['centers'])
-  calculate_distortion(cm[0]['elements'],cm[0]['centers'])
+  distortion = calculate_distortion(fm[0]['elements'],fm[0]['centers'])
+  print(distortion)
+  distortion = calculate_distortion(cm[0]['elements'],cm[0]['centers'])
+  print(distortion)
 
