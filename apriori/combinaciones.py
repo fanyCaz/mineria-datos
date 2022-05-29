@@ -7,7 +7,7 @@ from metric_rules import support, confidence, lift
 def read_data():
   data = pd.read_csv("registros.csv")
   variables = data.columns.values
-  return data, variables
+  return data, variables[1:]
 
 def create_combinations(data,variables):
   variable_combinations = list(permutations(variables,2))
@@ -72,8 +72,8 @@ def main():
   data, variables = read_data()
   variable_combinations, grouping = create_combinations(data,variables)
   metrics = generate_rules(data,variable_combinations,grouping)
-  minsup = 0.2
-  apriori(metrics, minsup, data)
+  minsup = 0.15
+  apriori(metrics, minsup, data,variables)
 
 if __name__  == '__main__':
   main()

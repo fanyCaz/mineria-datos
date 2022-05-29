@@ -1,13 +1,14 @@
 from metric_rules import support, confidence, lift
 
-def apriori(metrics, minsup, data):
+def apriori(metrics, minsup, data,variables):
   metrics = list(filter(None,metrics)) # clean from empty dictionaries
   frequent_items = list(filter(lambda rule: rule['s'] >= minsup,metrics))
   print("Elementos frecuentes")
   print( [ f['rule'] for f in frequent_items ])
-  I = frequent_items
+  I =  [ f['rule'] for f in frequent_items ]
+  print(I)
   for k, items in enumerate(frequent_items):
-    if k == len(frequent_items)-1:
+    if k == len(frequent_items)-2:
       break
     else:
       # set of new rules aka Ck, combine two elements excluding duplicates
@@ -18,7 +19,6 @@ def apriori(metrics, minsup, data):
       if sup >= minsup:
         I.append(new_rule_set)
   print( "reglas finales")
-  final_rules = list( set( [ i["rule"] for i in I]  ))
-  print(final_rules)
+  print(I)
   return I
 
