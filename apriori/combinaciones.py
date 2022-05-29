@@ -57,7 +57,6 @@ def generate_rules(data,combinations,grouping):
           query_then = f'{rule_then} > {min_q_j} & {rule_then} <= {element_then}'
         else:
           query_then = f'{rule_then} == "{element_then}"' 
-        print(f'que pasa {query_then}')
         then_data = if_data.query(query_then)
         n_then = len(data.query(query_then))
         n_both = len(then_data)

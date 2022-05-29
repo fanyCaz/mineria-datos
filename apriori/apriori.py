@@ -5,7 +5,7 @@ def apriori(metrics, minsup, data):
   frequent_items = list(filter(lambda rule: rule['s'] >= minsup,metrics))
   print("Elementos frecuentes")
   print( [ f['rule'] for f in frequent_items ])
-  I = frequent_items[0]
+  I = frequent_items
   for k, items in enumerate(frequent_items):
     if k == len(frequent_items)-1:
       break
@@ -18,6 +18,7 @@ def apriori(metrics, minsup, data):
       if sup >= minsup:
         I.append(new_rule_set)
   print( "reglas finales")
-  print( I )
+  final_rules = list( set( [ i["rule"] for i in I]  ))
+  print(final_rules)
   return I
 

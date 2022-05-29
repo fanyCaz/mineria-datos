@@ -13,3 +13,4 @@ def lift(total,n_if,n_then,n_both):
   if denom == 0:
     return 0
   return (n_both/total) / denom
+
