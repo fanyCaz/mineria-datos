@@ -14,7 +14,7 @@ def read_data(file_name):
   try:
     matrix = pd.read_csv(file_name)
     if debug:
-      matrix = matrix[['REGION-CENTROID-COL','REGION-CENTROID-ROW','REGION-PIXEL-COUNT']]
+      matrix = matrix[['REGION-CENTROID-COL','REGION-CENTROID-ROW','REGION-PIXEL-COUNT','SHORT-LINE-DENSITY-5','SHORT-LINE-DENSITY-2','VEDGE-MEAN']]
     else:
       # complete numerical values
       matrix = matrix.select_dtypes('number')
@@ -25,17 +25,15 @@ def read_data(file_name):
 matrix = read_data('segmentation_paper.csv')
 matrix = np.array(matrix,dtype = 'float64')
 length_df = len(matrix[0])
-print(length_df)
-number_centroids = input_normalized('Ingresa el numero de centros: ',[1,100]) # 100 es límite por ahora
+max_rows_sample = 10
+
+number_centroids = input_normalized('Ingresa el numero de centros: ',[1,max_rows_sample ])
 
 norm_matrix = normalize(matrix)
-#centers = np.array([[0,0,0],[1,1,1]])
-#centers = np.array([[0,0,0],[1,1,1],[0.5,0.5,0.5]])
-#centers = np.array([[0,0,0],[1,1,1],[0,1,1],[1,0,1]])
-#centers = np.array([[0,0,0],[1,1,1],[0,1,1],[1,0,0],[0.5,0.5,0.5]])
 
 centers = generador(number_centroids, length_df)
 k = len(centers)
 #kmeans(norm_matrix,centers)
-refine(centers,norm_matrix,k)
+number_subsamples = 10
+refine(centers,norm_matrix,k,number_subsamples,max_rows_sample)
 

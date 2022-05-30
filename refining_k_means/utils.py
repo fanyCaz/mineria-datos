@@ -1,12 +1,15 @@
 import numpy as np
 np.set_printoptions(threshold=np.inf)
 
-def imprimir_matriz(nombre, matriz):
+def imprimir_matriz(nombre, matriz, extra_str=None):
   with open(f"{nombre}.txt", "w+") as archi:
     archi.writelines(f"{nombre}\n")
     archi.writelines("\n")
     archi.writelines("Matriz:\n")
     archi.writelines(f"{matriz}")
+    if extra_str:
+      archi.writelines("\n")
+      archi.writelines(extra_str)
 
 def generador(numero_centros, numero_coordenadas):
   centros=np.random.rand(numero_centros, numero_coordenadas)

@@ -1,14 +1,14 @@
 from preprocessing import calculate_distances, normalize, new_centroids, calculate_distortion
+from utils import imprimir_matriz
 import numpy as np
 from numpy import ndarray as nd
 import sys
 import math
 
-def refine(initial_start_point, data, k, num_subsamples=1):
+def refine(initial_start_point, data, k, num_subsamples=4, max_rows=10):
   cm = []
   flatten_data = nd.flatten(data)
   print(f'centros iniciales \n{initial_start_point}')
-  max_rows = 10
   centers = initial_start_point
   for i in range(num_subsamples):
     rand_start = np.random.randint(1,max_rows)
@@ -18,18 +18,19 @@ def refine(initial_start_point, data, k, num_subsamples=1):
     cm.append(save)
   fms = []
   print("primeros resultados")
-  print(cm)
+  #print(cm)
   centers = cm[0]['centers']
   for j in range(num_subsamples):
+    centers = cm[j]['centers']
     elements, centers, j_obj, belonging = kmeans(cm[j]['elements'],centers)
     save = {'elements': s_i, 'centers': centers}
     fms.append(save)
   print("resultados despues")
-  print(fms)
+  #print(fms)
 
-  print("Distortion")
-  distortion(fms,cm)
-  return
+  idx_min_distortion,min_distortion = distortion(fms,cm)
+  best_centers = fms[idx_min_distortion]['centers']
+  return best_centers
 
 def kmeans(norm_matrix,centers):
   j_objective = 0
@@ -59,7 +60,7 @@ def kmeansMod(start_point,sample,k):
     centers, j_objective, belonging = new_centroids(distances,centers,sample,j_ant)
     if math.isclose(j_objective,j_ant,rel_tol=0.0001):
       elements = centroids_belonging(belonging, distances)
-      empty_cluster = len(elements) != len(centers)
+      empty_cluster = len(elements) != len(centers) # asking if not all clusters has elements
       if empty_cluster:
         centers = update_empty_centers(centers,belonging,elements,sample)
       break
@@ -99,11 +100,13 @@ def centroids_belonging(belonging: list, distances: list):
   return elements
 
 def distortion(fm,cm):
-  dis = []
+  print("Distortions")
+  distortions = []
   for jdx,elements in enumerate(fm):
-    dis.append( calculate_distances(fm[jdx]['elements'],cm[jdx]['centers']) )
-  distortion = calculate_distortion(fm[0]['elements'],fm[0]['centers'])
-  print(distortion)
-  distortion = calculate_distortion(cm[0]['elements'],cm[0]['centers'])
-  print(distortion)
+    distortion = calculate_distortion(fm[jdx]['elements'],fm[jdx]['centers']) 
+    distortions.append( [jdx,distortion] )
+  min_distortion_idx = np.argmin( distortions,axis=0)[1]
+  str_distortion = f'Mínima distorsión {distortions[min_distortion_idx][1]}'
+  imprimir_matriz('distortions',distortions,str_distortion)
+  return min_distortion_idx, distortions[min_distortion_idx][1]
 
