@@ -7,7 +7,6 @@ import math
 
 def refine(initial_start_point, data, k, num_subsamples=4, max_rows=10):
   cm = []
-  flatten_data = nd.flatten(data)
   #print(f'centros iniciales \n{initial_start_point}')
   centers = initial_start_point
   for i in range(num_subsamples):
@@ -15,23 +14,24 @@ def refine(initial_start_point, data, k, num_subsamples=4, max_rows=10):
     elements, centers, j_obj, belonging = kmeansMod(centers,s_i,k)
     save = {'elements': s_i, 'centers': centers}
     cm.append(save)
-  idx_min_distortion,min_distortion_cm = distortion(cm)
-  print(f"minima cm {min_distortion_cm}")
+  #idx_min_distortion,min_distortion = distortion(cm)
+  #print(f"minima fm {min_distortion}")
   fms = []
   print("primeros resultados")
+  print( elements )
   #print(cm)
   for j in range(num_subsamples):
     centers = cm[j]['centers']
     elements, centers, j_obj, belonging = kmeans(cm[j]['elements'],centers)
-    save = {'elements': s_i, 'centers': centers}
+    save = {'elements': cm[j]['elements'], 'centers': centers}
     fms.append(save)
   print("resultados despues")
   #print(fms)
   #print(f'centros finales \n{centers}')
-
-  idx_min_distortion,min_distortion_fm = distortion(fms)
-  print(f"minima fm {min_distortion_fm}")
-  best_centers = fms[idx_min_distortion]['centers']
+  print( elements )
+  best_centers = distortion(fms,cm)
+  #print(f"minima fm {min_distortion}")
+  #best_centers = fms[idx_min_distortion]['centers']
   return best_centers
 
 def get_subsample(data,num_elements):
@@ -106,13 +106,25 @@ def centroids_belonging(belonging: list, distances: list):
       elements[centroid_number].append({'idx':idx, 'distance': np.min(distances[idx]) })
   return elements
 
-def distortion(solution):
-  distortions = []
-  for jdx,elements in enumerate(solution):
-    distortion = calculate_distortion(solution[jdx]['elements'],solution[jdx]['centers'])
-    distortions.append( [jdx,distortion] )
-  min_distortion_idx = np.argmin( distortions,axis=0)[1]
-  str_distortion = f'Mínima distorsión {distortions[min_distortion_idx][1]}'
-  #imprimir_matriz('distortions',distortions,str_distortion)
-  return min_distortion_idx, distortions[min_distortion_idx][1]
+def distortion(k_solution, smooth_solution):
+  distortions_fm = []
+  for jdx,elements in enumerate(k_solution):
+    distortion = calculate_distortion(k_solution[jdx]['elements'],k_solution[jdx]['centers'])
+    distortions_fm.append(distortion)
+  min_distortion_fm_idx = np.argmin( distortions_fm )
 
+  distortions_cm = []
+  for jdx,elements in enumerate(smooth_solution):
+    distortion = calculate_distortion(smooth_solution[jdx]['elements'],smooth_solution[jdx]['centers'])
+    distortions_cm.append(distortion)
+  min_distortion_cm_idx = np.argmin( distortions_cm )
+
+  min_distortion = 0
+  best_centers = []
+  print(f'distorsiones: {distortions_cm[min_distortion_cm_idx]} .. {distortions_fm[min_distortion_fm_idx]}')
+  if(distortions_cm[min_distortion_cm_idx] < distortions_fm[min_distortion_fm_idx]):
+    best_centers = smooth_solution[min_distortion_cm_idx]['centers']
+  else:
+    best_centers = smooth_solution[min_distortion_fm_idx]['centers']
+
+  return best_centers
