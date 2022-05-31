@@ -26,9 +26,9 @@ def refine(initial_start_point, data, k, num_subsamples=4, max_rows=10):
     save = {'elements': s_i, 'centers': centers}
     fms.append(save)
   print("resultados despues")
-  #print(fms)
+  print(fms)
 
-  idx_min_distortion,min_distortion = distortion(fms,cm)
+  idx_min_distortion,min_distortion = distortion(fms)
   best_centers = fms[idx_min_distortion]['centers']
   return best_centers
 
@@ -99,7 +99,7 @@ def centroids_belonging(belonging: list, distances: list):
       elements[centroid_number].append({'idx':idx, 'distance': np.min(distances[idx]) })
   return elements
 
-def distortion(fm,cm):
+def distortion(fm):
   print("Distortions")
   distortions = []
   for jdx,elements in enumerate(fm):
@@ -107,6 +107,6 @@ def distortion(fm,cm):
     distortions.append( [jdx,distortion] )
   min_distortion_idx = np.argmin( distortions,axis=0)[1]
   str_distortion = f'Mínima distorsión {distortions[min_distortion_idx][1]}'
-  imprimir_matriz('distortions',distortions,str_distortion)
+  #imprimir_matriz('distortions',distortions,str_distortion)
   return min_distortion_idx, distortions[min_distortion_idx][1]
 

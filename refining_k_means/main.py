@@ -4,13 +4,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import math
-from utils import generador, input_normalized
+from utils import generador, input_normalized, imprimir_matriz
 
 # una vez obtenido el scalar de distortion entonces ya se puede aplicar kmeans a toda la base de datos, 
 # esta parte primero hay que guardar los centros en un txt y de ahi los leo para kmeans general
 def read_data(file_name):
   matrix = []
-  debug = True
+  debug = False
   try:
     matrix = pd.read_csv(file_name)
     if debug:
@@ -33,7 +33,15 @@ norm_matrix = normalize(matrix)
 
 centers = generador(number_centroids, length_df)
 k = len(centers)
-#kmeans(norm_matrix,centers)
+
+print("Refinamiento de k-means")
+print("Primero se refinarán los centros")
 number_subsamples = 10
-refine(centers,norm_matrix,k,number_subsamples,max_rows_sample)
+refined_centers = refine(centers,norm_matrix,k,number_subsamples,max_rows_sample)
+#imprimir_matriz('centros_refinados',refined_centers)
+
+elements, centers, j_objective, belonging = kmeans(norm_matrix,refined_centers)
+print(f'Objetivo logrado con refinamiento: {j_objective}')
+elements, centers, j_objective, belonging = kmeans(norm_matrix,centers)
+print(f'Objetivo logrado sin refinamiento: {j_objective}')
 
