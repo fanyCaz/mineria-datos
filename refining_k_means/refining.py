@@ -16,6 +16,7 @@ def refine(initial_start_point, data, k, num_subsamples=4, max_rows=10):
     elements, centers, j_obj, belonging = kmeansMod(centers,s_i,k)
     save = {'elements': s_i, 'centers': centers}
     cm.append(save)
+  idx_min_distortion,min_distortion_cm = distortion(fms)
   fms = []
   print("primeros resultados")
   #print(cm)
@@ -28,8 +29,8 @@ def refine(initial_start_point, data, k, num_subsamples=4, max_rows=10):
   print("resultados despues")
   print(fms)
 
-  idx_min_distortion,min_distortion = distortion(fms)
-  best_centers = fms[idx_min_distortion]['centers']
+  idx_min_distortion,min_distortion_fm = distortion(fms)
+  best_centers = fms[idx_min_distortion_fm]['centers']
   return best_centers
 
 def kmeans(norm_matrix,centers):
