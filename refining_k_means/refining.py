@@ -8,11 +8,10 @@ import math
 def refine(initial_start_point, data, k, num_subsamples=4, max_rows=10):
   cm = []
   flatten_data = nd.flatten(data)
-  print(f'centros iniciales \n{initial_start_point}')
+  #print(f'centros iniciales \n{initial_start_point}')
   centers = initial_start_point
   for i in range(num_subsamples):
-    rand_start = np.random.randint(1,max_rows)
-    s_i = data[rand_start:rand_start+max_rows]
+    s_i = get_subsample(data,max_rows)
     elements, centers, j_obj, belonging = kmeansMod(centers,s_i,k)
     save = {'elements': s_i, 'centers': centers}
     cm.append(save)
@@ -21,19 +20,24 @@ def refine(initial_start_point, data, k, num_subsamples=4, max_rows=10):
   fms = []
   print("primeros resultados")
   #print(cm)
-  centers = cm[0]['centers']
   for j in range(num_subsamples):
     centers = cm[j]['centers']
     elements, centers, j_obj, belonging = kmeans(cm[j]['elements'],centers)
     save = {'elements': s_i, 'centers': centers}
     fms.append(save)
   print("resultados despues")
-  print(fms)
+  #print(fms)
+  #print(f'centros finales \n{centers}')
 
   idx_min_distortion,min_distortion_fm = distortion(fms)
   print(f"minima fm {min_distortion_fm}")
   best_centers = fms[idx_min_distortion]['centers']
   return best_centers
+
+def get_subsample(data,num_elements):
+  rand_elements = np.random.choice(data.shape[0], num_elements,replace=False)
+  sample = data[rand_elements]
+  return sample
 
 def kmeans(norm_matrix,centers):
   j_objective = 0
@@ -102,11 +106,10 @@ def centroids_belonging(belonging: list, distances: list):
       elements[centroid_number].append({'idx':idx, 'distance': np.min(distances[idx]) })
   return elements
 
-def distortion(fm):
-  print("Distortions")
+def distortion(solution):
   distortions = []
-  for jdx,elements in enumerate(fm):
-    distortion = calculate_distortion(fm[jdx]['elements'],fm[jdx]['centers']) 
+  for jdx,elements in enumerate(solution):
+    distortion = calculate_distortion(solution[jdx]['elements'],solution[jdx]['centers'])
     distortions.append( [jdx,distortion] )
   min_distortion_idx = np.argmin( distortions,axis=0)[1]
   str_distortion = f'Mínima distorsión {distortions[min_distortion_idx][1]}'

@@ -10,7 +10,7 @@ from utils import generador, input_normalized, imprimir_matriz
 # esta parte primero hay que guardar los centros en un txt y de ahi los leo para kmeans general
 def read_data(file_name):
   matrix = []
-  debug = False
+  debug = True
   try:
     matrix = pd.read_csv(file_name)
     if debug:
@@ -21,7 +21,7 @@ def read_data(file_name):
   except:
     raise FileNotFoundError
   return matrix
-  
+
 matrix = read_data('segmentation_paper.csv')
 matrix = np.array(matrix,dtype = 'float64')
 length_df = len(matrix[0])
