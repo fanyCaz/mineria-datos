@@ -37,7 +37,7 @@ k = len(centers)
 print("Refinamiento de k-means")
 print("Primero se refinarán los centros")
 number_subsamples = 10
-refined_centers = refine(centers,norm_matrix,k,number_subsamples,max_rows_sample)
+refined_centers, _, _ = refine(centers,norm_matrix,k,number_subsamples,max_rows_sample)
 #imprimir_matriz('centros_refinados',refined_centers)
 
 elements, centers, j_objective, belonging = kmeans(norm_matrix,refined_centers)

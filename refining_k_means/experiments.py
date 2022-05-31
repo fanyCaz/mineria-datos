@@ -84,8 +84,9 @@ def read_data(file_name, n_cols=2):
 column_names = ["id", "num_centroids", "num_variables", "result_pre_refining", "result_post_refining", "distortion_cm",
                 "distortion_fm"]
 results = pd.DataFrame()
-
-for num_run in range(0, 100):
+index = 1
+for num_run in range(0, 1):
+    print("done 1")
     for num_centroids in range(2, 11):
         for num_variables in range(2, 20):
             matrix = read_data('segmentation_paper.csv', num_variables)
@@ -95,16 +96,33 @@ for num_run in range(0, 100):
             norm_matrix = normalize(matrix)
             centers = generador(num_centroids, length_df)
             k = len(centers)
-            print("---------------------------------------------------------------------------------------------------")
-            print(f"Empezando con {num_centroids} y {num_variables}")
-            print("Refinamiento de k-means")
-            print("Primero se refinarán los centros")
+            # print("---------------------------------------------------------------------------------------------------")
+            #print(f"Empezando con {num_centroids} centroides y {num_variables} variables")
+            #print("Refinamiento de k-means")
+            #print("Primero se refinarán los centros")
             number_subsamples = 10
-            refined_centers = refine(centers, norm_matrix, k, number_subsamples, max_rows_sample)
+            refined_centers, dist1, dist2 = refine(centers, norm_matrix, k, number_subsamples, max_rows_sample)
             # imprimir_matriz('centros_refinados',refined_centers)
-            elements, centers, j_objective, belonging = kmeans(norm_matrix, centers)
-            print(f'Objetivo logrado sin refinamiento: {j_objective}')
-            distortion = distortion()
-            print(f"Distorsion sin refinamiento: ")
+            elements, centers, objective_pre, belonging = kmeans(norm_matrix, centers)
+            #print(f'Objetivo logrado sin refinamiento: {objective_pre}')
+            #print(f"Distorsion sin refinamiento: {dist1}")
             elements, centers, j_objective, belonging = kmeans(norm_matrix, refined_centers)
-            print(f'Objetivo logrado con refinamiento: {j_objective}')
+            #print(f'Objetivo logrado con refinamiento: {j_objective}')
+            #print(f"Distorsion sin refinamiento: {dist2}")
+            row = {"id": index, "num_centroids": num_centroids, "num_variables":num_variables, "result_pre_refining":
+                   objective_pre, "result_post_refining": j_objective, "distortion_cm": dist1, "distortion:fm": dist2}
+            # print(row)
+            results = results.append(row, ignore_index=True)
+            index = index + 1
+
+
+#figure, axis = plt.subplots(2, 2)
+#axis[0, 0].plot()
+
+ax = plt.gca()
+
+results.plot(kind='line',x='id',y='result_pre_refining',ax=ax)
+results.plot(kind='line',x='id',y='result_post_refining', color='red', ax=ax)
+
+plt.show()
+

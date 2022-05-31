@@ -17,22 +17,22 @@ def refine(initial_start_point, data, k, num_subsamples=4, max_rows=10):
   #idx_min_distortion,min_distortion = distortion(cm)
   #print(f"minima fm {min_distortion}")
   fms = []
-  print("primeros resultados")
-  print( elements )
+  #print("primeros resultados")
+  #print( elements )
   #print(cm)
   for j in range(num_subsamples):
     centers = cm[j]['centers']
     elements, centers, j_obj, belonging = kmeans(cm[j]['elements'],centers)
     save = {'elements': cm[j]['elements'], 'centers': centers}
     fms.append(save)
-  print("resultados despues")
+  #print("resultados despues")
   #print(fms)
   #print(f'centros finales \n{centers}')
-  print( elements )
-  best_centers = distortion(fms,cm)
+  #print( elements )
+  best_centers, dist1, dist2 = distortion(fms,cm)
   #print(f"minima fm {min_distortion}")
   #best_centers = fms[idx_min_distortion]['centers']
-  return best_centers
+  return best_centers, dist1, dist2
 
 def get_subsample(data,num_elements):
   rand_elements = np.random.choice(data.shape[0], num_elements,replace=False)
@@ -121,10 +121,10 @@ def distortion(k_solution, smooth_solution):
 
   min_distortion = 0
   best_centers = []
-  print(f'distorsiones: {distortions_cm[min_distortion_cm_idx]} .. {distortions_fm[min_distortion_fm_idx]}')
+  # print(f'distorsiones: {distortions_cm[min_distortion_cm_idx]} .. {distortions_fm[min_distortion_fm_idx]}')
   if(distortions_cm[min_distortion_cm_idx] < distortions_fm[min_distortion_fm_idx]):
     best_centers = smooth_solution[min_distortion_cm_idx]['centers']
   else:
     best_centers = smooth_solution[min_distortion_fm_idx]['centers']
 
-  return best_centers
+  return best_centers, distortions_cm[min_distortion_cm_idx], distortions_fm[min_distortion_fm_idx]
