@@ -85,8 +85,7 @@ column_names = ["id", "num_centroids", "num_variables", "result_pre_refining", "
                 "distortion_fm"]
 results = pd.DataFrame()
 index = 1
-for num_run in range(0, 1):
-    print("done 1")
+for num_run in range(0, 2):
     for num_centroids in range(2, 11):
         for num_variables in range(2, 20):
             matrix = read_data('segmentation_paper.csv', num_variables)
@@ -110,19 +109,41 @@ for num_run in range(0, 1):
             #print(f'Objetivo logrado con refinamiento: {j_objective}')
             #print(f"Distorsion sin refinamiento: {dist2}")
             row = {"id": index, "num_centroids": num_centroids, "num_variables":num_variables, "result_pre_refining":
-                   objective_pre, "result_post_refining": j_objective, "distortion_cm": dist1, "distortion:fm": dist2}
+                   objective_pre, "result_post_refining": j_objective, "distortion_cm": dist1, "distortion_fm": dist2}
             # print(row)
             results = results.append(row, ignore_index=True)
             index = index + 1
 
+relative_improvement_obj = (results['result_pre_refining'] - results['result_post_refining'])
+rel_obj = (relative_improvement_obj / results['result_pre_refining']) * 100
+relative_improvement_obj = rel_obj
+relative_improvement_dist = (results['distortion_cm'] - results['distortion_fm'])
+rel_dist = (relative_improvement_dist / results['distortion_cm']) * 100
+relative_improvement_dist = rel_dist
+rels_obj = pd.DataFrame(relative_improvement_obj)
+rels_obj = rels_obj.rename(columns={0: 'rel_improv_obj'})
+rels_dist = pd.DataFrame(relative_improvement_dist)
+rels_dist = rels_dist.rename(columns={0: 'rel_improv_dist'})
 
-#figure, axis = plt.subplots(2, 2)
-#axis[0, 0].plot()
+df_all = pd.concat([results, rels_obj, rels_dist], axis=1)
 
-ax = plt.gca()
+figure, axis = plt.subplots(2, 2)
+axis[0, 0].plot(results['id'], results['result_pre_refining'])
+axis[0, 0].plot(results['id'], results['result_post_refining'], color='red')
+axis[0, 0].set_title("Resultados del objetivo")
 
-results.plot(kind='line',x='id',y='result_pre_refining',ax=ax)
-results.plot(kind='line',x='id',y='result_post_refining', color='red', ax=ax)
+
+axis[0, 1].plot(results['id'], results['distortion_cm'])
+axis[0, 1].plot(results['id'], results['distortion_fm'], color='red')
+axis[0, 1].set_title("Resultados de la distorsion")
+
+axis[1, 0].plot(results['id'], df_all['rel_improv_obj'])
+axis[1, 0].axhline(y=0.0, color='r', linestyle='-')
+axis[1, 0].set_title("% de mejora relativa del objetivo")
+
+axis[1, 1].plot(results['id'], df_all['rel_improv_dist'])
+axis[1, 1].axhline(y=0.0, color='r', linestyle='-')
+axis[1, 1].set_title("% de mejora relativa de distorsión")
 
 plt.show()
 
