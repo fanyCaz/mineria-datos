@@ -121,7 +121,6 @@ def distortion(k_solution, smooth_solution):
 
   min_distortion = 0
   best_centers = []
-  # print(f'distorsiones: {distortions_cm[min_distortion_cm_idx]} .. {distortions_fm[min_distortion_fm_idx]}')
   if(distortions_cm[min_distortion_cm_idx] < distortions_fm[min_distortion_fm_idx]):
     best_centers = smooth_solution[min_distortion_cm_idx]['centers']
   else:
