@@ -6,12 +6,17 @@ def support(total,n_both):
   return n_both/total
 
 def confidence(n_both,n_if):
+  if n_if == 0:
+    return 0
   return n_both/n_if
 
 def lift(total,n_if,n_then,n_both):
+  denom = (n_if/total) * (n_then/total)
+  if denom == 0:
+    return 0
   return (n_both/total) / ( (n_if/total) * (n_then/total) )
 
-data = pd.read_csv("ejemplo.csv")
+data = pd.read_csv("registros.csv")
 
 variables = data.columns.values
 
@@ -59,6 +64,6 @@ for idx,variable in enumerate(variable_combinations):
       s = support(total_elements, n_both)
       c = confidence(n_both,n_if)
       l = lift(total_elements,n_if,n_then,n_both)
-      metrics[f'{rule_if}-{rule_then}'] = {'s': s, 'c': c, 'l': l}
-      print(metrics)
+      metrics[f'{rule_if} -> {element_if} ::-{rule_then} -> {element_then}'] = {'s': s, 'c': c, 'l': l}
+      print({'support': s, 'confidence': c, 'lift': l})
 
