@@ -11,73 +11,19 @@ from utils import generador, input_normalized, imprimir_matriz
 # esta parte primero hay que guardar los centros en un txt y de ahi los leo para kmeans general
 def read_data(file_name, n_cols=2):
     matrix = []
-    matrix = pd.read_csv(file_name)
+    matrix = pd.read_csv(file_name, sep='\t')
     if n_cols == 2:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW']]
+        matrix = matrix[['area', 'perimeter']]
     elif n_cols == 3:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT']]
+        matrix = matrix[['area', 'perimeter', 'compactness']]
     elif n_cols == 4:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5']]
+        matrix = matrix[['area', 'perimeter', 'compactness', 'length_kernel']]
     elif n_cols == 5:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5',
-                         'SHORT-LINE-DENSITY-2']]
+        matrix = matrix[['area', 'perimeter', 'compactness', 'length_kernel', 'width_kernel']]
     elif n_cols == 6:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5',
-                         'SHORT-LINE-DENSITY-2', 'VEDGE-MEAN']]
+        matrix = matrix[['area', 'perimeter', 'compactness', 'length_kernel', 'assimetry']]
     elif n_cols == 7:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5',
-                         'SHORT-LINE-DENSITY-2', 'VEDGE-MEAN', 'VEDGE-SD']]
-    elif n_cols == 8:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5',
-                         'SHORT-LINE-DENSITY-2', 'VEDGE-MEAN', 'VEDGE-SD', 'HEDGE-MEAN']]
-    elif n_cols == 9:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5',
-                         'SHORT-LINE-DENSITY-2', 'VEDGE-MEAN', 'VEDGE-SD', 'HEDGE-MEAN', 'HEDGE-SD']]
-    elif n_cols == 10:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5',
-                         'SHORT-LINE-DENSITY-2', 'VEDGE-MEAN', 'VEDGE-SD', 'HEDGE-MEAN', 'HEDGE-SD', 'INTENSITY-MEAN']]
-    elif n_cols == 11:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5',
-                         'SHORT-LINE-DENSITY-2', 'VEDGE-MEAN', 'VEDGE-SD', 'HEDGE-MEAN', 'HEDGE-SD', 'INTENSITY-MEAN',
-                         'RAWRED-MEAN']]
-    elif n_cols == 12:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5',
-                         'SHORT-LINE-DENSITY-2', 'VEDGE-MEAN', 'VEDGE-SD', 'HEDGE-MEAN', 'HEDGE-SD', 'INTENSITY-MEAN',
-                         'RAWRED-MEAN', 'RAWBLUE-MEAN']]
-    elif n_cols == 13:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5',
-                         'SHORT-LINE-DENSITY-2', 'VEDGE-MEAN', 'VEDGE-SD', 'HEDGE-MEAN', 'HEDGE-SD', 'INTENSITY-MEAN',
-                         'RAWRED-MEAN', 'RAWBLUE-MEAN', 'RAWGREEN-MEAN']]
-    elif n_cols == 14:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5',
-                         'SHORT-LINE-DENSITY-2', 'VEDGE-MEAN', 'VEDGE-SD', 'HEDGE-MEAN', 'HEDGE-SD', 'INTENSITY-MEAN',
-                         'RAWRED-MEAN', 'RAWBLUE-MEAN', 'RAWGREEN-MEAN', 'EXRED-MEAN']]
-    elif n_cols == 15:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5',
-                         'SHORT-LINE-DENSITY-2', 'VEDGE-MEAN', 'VEDGE-SD', 'HEDGE-MEAN', 'HEDGE-SD', 'INTENSITY-MEAN',
-                         'RAWRED-MEAN', 'RAWBLUE-MEAN', 'RAWGREEN-MEAN', 'EXRED-MEAN', 'EXBLUE-MEAN']]
-
-    elif n_cols == 16:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5',
-                         'SHORT-LINE-DENSITY-2', 'VEDGE-MEAN', 'VEDGE-SD', 'HEDGE-MEAN', 'HEDGE-SD', 'INTENSITY-MEAN',
-                         'RAWRED-MEAN', 'RAWBLUE-MEAN', 'RAWGREEN-MEAN', 'EXRED-MEAN', 'EXBLUE-MEAN', 'EXGREEN-MEAN']]
-
-    elif n_cols == 17:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5',
-                         'SHORT-LINE-DENSITY-2', 'VEDGE-MEAN', 'VEDGE-SD', 'HEDGE-MEAN', 'HEDGE-SD', 'INTENSITY-MEAN',
-                         'RAWRED-MEAN', 'RAWBLUE-MEAN', 'RAWGREEN-MEAN', 'EXRED-MEAN', 'EXBLUE-MEAN', 'EXGREEN-MEAN',
-                         'VALUE-MEAN']]
-    elif n_cols == 18:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5',
-                         'SHORT-LINE-DENSITY-2', 'VEDGE-MEAN', 'VEDGE-SD', 'HEDGE-MEAN', 'HEDGE-SD', 'INTENSITY-MEAN',
-                         'RAWRED-MEAN', 'RAWBLUE-MEAN', 'RAWGREEN-MEAN', 'EXRED-MEAN', 'EXBLUE-MEAN', 'EXGREEN-MEAN',
-                         'VALUE-MEAN', 'SATURATION-MEAN']]
-
-    elif n_cols == 19:
-        matrix = matrix[['REGION-CENTROID-COL', 'REGION-CENTROID-ROW', 'REGION-PIXEL-COUNT', 'SHORT-LINE-DENSITY-5',
-                         'SHORT-LINE-DENSITY-2', 'VEDGE-MEAN', 'VEDGE-SD', 'HEDGE-MEAN', 'HEDGE-SD', 'INTENSITY-MEAN',
-                         'RAWRED-MEAN', 'RAWBLUE-MEAN', 'RAWGREEN-MEAN', 'EXRED-MEAN', 'EXBLUE-MEAN', 'EXGREEN-MEAN',
-                         'VALUE-MEAN', 'SATURATION-MEAN', 'HUE-MEAN']]
+        matrix = matrix[['area', 'perimeter', 'compactness', 'length_kernel', 'assimetry', 'length_kernel_groove']]
     return matrix
 
 
@@ -85,10 +31,10 @@ column_names = ["id", "num_centroids", "num_variables", "result_pre_refining", "
                 "distortion_fm"]
 results = pd.DataFrame()
 index = 1
-for num_run in range(0, 3):
+for num_run in range(0, 2):
     for num_centroids in range(2, 11):
-        for num_variables in range(2, 20):
-            matrix = read_data('segmentation_paper.csv', num_variables)
+        for num_variables in range(2, 8):
+            matrix = read_data('seeds_dataset.txt', num_variables)
             matrix = np.array(matrix, dtype='float64')
             length_df = len(matrix[0])
             max_rows_sample = 10
@@ -127,33 +73,6 @@ rels_dist = rels_dist.rename(columns={0: 'rel_improv_dist'})
 
 df_all = pd.concat([results, rels_obj, rels_dist], axis=1)
 
-figure, axis = plt.subplots(2, 2)
-axis[0, 0].plot(results['id'], results['result_pre_refining'])
-axis[0, 0].plot(results['id'], results['result_post_refining'], color='red')
-axis[0, 0].set_title("Resultados del objetivo")
-axis[0, 0].set_xlabel("Iteración")
-axis[0, 0].set_ylabel("Valor de objetivo")
-
-axis[0, 1].plot(results['id'], results['distortion_cm'])
-axis[0, 1].plot(results['id'], results['distortion_fm'], color='red')
-axis[0, 1].set_title("Resultados de la distorsion")
-axis[0, 1].set_xlabel("Iteración")
-axis[0, 1].set_ylabel("Valor de distorsión")
-
-axis[1, 0].plot(results['id'], df_all['rel_improv_obj'])
-axis[1, 0].axhline(y=0.0, color='r', linestyle='-')
-axis[1, 0].set_title("% de mejora relativa del objetivo")
-axis[1, 0].set_xlabel("Iteración")
-axis[1, 0].set_ylabel("% de mejora relativa")
-
-axis[1, 1].plot(results['id'], df_all['rel_improv_dist'])
-axis[1, 1].axhline(y=0.0, color='r', linestyle='-')
-axis[1, 1].set_title("% de mejora relativa de distorsión")
-axis[1, 1].set_xlabel("Iteración")
-axis[1, 1].set_ylabel("% de mejora relativa")
-
-plt.show()
-
 lines = []
 
 mean_improv_obj_all = df_all.rel_improv_obj.mean()
@@ -185,3 +104,30 @@ with open("resultados.txt", "w") as f:
         print(line)
         f.write(line)
         f.write("\n")
+
+figure, axis = plt.subplots(2, 2)
+axis[0, 0].plot(results['id'], results['result_pre_refining'])
+axis[0, 0].plot(results['id'], results['result_post_refining'], color='red')
+axis[0, 0].set_title("Resultados del objetivo")
+axis[0, 0].set_xlabel("Iteración")
+axis[0, 0].set_ylabel("Valor de objetivo")
+
+axis[0, 1].plot(results['id'], results['distortion_cm'])
+axis[0, 1].plot(results['id'], results['distortion_fm'], color='red')
+axis[0, 1].set_title("Resultados de la distorsion")
+axis[0, 1].set_xlabel("Iteración")
+axis[0, 1].set_ylabel("Valor de distorsión")
+
+axis[1, 0].plot(results['id'], df_all['rel_improv_obj'])
+axis[1, 0].axhline(y=0.0, color='r', linestyle='-')
+axis[1, 0].set_title("% de mejora relativa del objetivo")
+axis[1, 0].set_xlabel("Iteración")
+axis[1, 0].set_ylabel("% de mejora relativa")
+
+axis[1, 1].plot(results['id'], df_all['rel_improv_dist'])
+axis[1, 1].axhline(y=0.0, color='r', linestyle='-')
+axis[1, 1].set_title("% de mejora relativa de distorsión")
+axis[1, 1].set_xlabel("Iteración")
+axis[1, 1].set_ylabel("% de mejora relativa")
+
+plt.show()
