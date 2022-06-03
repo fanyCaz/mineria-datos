@@ -7,14 +7,15 @@ import math
 from datetime import datetime
 from utils import generador, input_normalized, imprimir_matriz, print_norm_matrix
 
-def read_data(file_name, number_columns):
+def read_data(file_name, number_columns,type_sep):
   matrix = []
   debug = False
   try:
-    matrix = pd.read_csv(file_name)
+    matrix = pd.read_csv(file_name, sep=type_sep)
     if number_columns == 0:
       # complete numerical values
-      matrix = matrix.select_dtypes('number')
+      #matrix = matrix.select_dtypes('number')
+      matrix = matrix.iloc[:,:-1]
     else:
       matrix = matrix.iloc[:,1:number_columns]
       #matrix = matrix[['REGION-CENTROID-COL','REGION-CENTROID-ROW','REGION-PIXEL-COUNT','SHORT-LINE-DENSITY-5','SHORT-LINE-DENSITY-2','VEDGE-MEAN']]
@@ -28,9 +29,9 @@ menu_selection = input_normalized('1. Quiero usar toda la base de datos\n 2. Qui
 if menu_selection == 1:
   num_columns = 0
 elif menu_selection == 2:
-  num_columns = input_normalized('Escribe cuántas columnas quieres usar solo se pueden usar del 2 al 19: ',[1,19])
+  num_columns = input_normalized('Escribe cuántas columnas quieres usar solo se pueden usar del 2 al 7: ',[1,7])
 
-matrix = read_data('segmentation_paper.csv', num_columns)
+matrix = read_data('seeds_dataset.txt', num_columns,'\t')
 matrix = np.array(matrix,dtype = 'float64')
 length_df = len(matrix[0])
 max_rows_sample = 10
