@@ -5,7 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import math
 from datetime import datetime
-from utils import generador, input_normalized, imprimir_matriz
+from utils import generador, input_normalized, imprimir_matriz, print_norm_matrix
 
 def read_data(file_name, number_columns):
   matrix = []
@@ -39,7 +39,7 @@ print("Se ha leído el dataset..")
 number_centroids = input_normalized('Ingresa el numero de centros a usar: Solo se pueden usar de 2 a 10: ',[1,max_rows_sample ])
 
 norm_matrix = normalize(matrix)
-
+print_norm_matrix('matriz_normalizada',norm_matrix)
 centers = generador(number_centroids, length_df)
 k = len(centers)
 

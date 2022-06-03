@@ -101,9 +101,11 @@ def centroids_belonging(belonging: list, distances: list):
     centroid_number = np.argmax(element)
     try:
       elements[centroid_number].append({'idx':idx, 'distance': np.min(distances[idx]) })
+      #elements[centroid_number].append({'idx':idx })
     except:
       elements[centroid_number] = []
       elements[centroid_number].append({'idx':idx, 'distance': np.min(distances[idx]) })
+      #elements[centroid_number].append({'idx':idx })
   return elements
 
 def distortion(k_solution, smooth_solution):

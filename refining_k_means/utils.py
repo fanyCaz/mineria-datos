@@ -11,6 +11,9 @@ def imprimir_matriz(nombre, matriz, extra_str=None):
       archi.writelines("\n")
       archi.writelines(extra_str)
 
+def print_norm_matrix(nombre,matrix):
+  np.savetxt("foo.csv", matrix, delimiter=",")
+
 def generador(numero_centros, numero_coordenadas):
   centros=np.random.rand(numero_centros, numero_coordenadas)
   return centros
