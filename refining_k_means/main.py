@@ -29,7 +29,7 @@ menu_selection = input_normalized('1. Quiero usar toda la base de datos\n 2. Qui
 if menu_selection == 1:
   num_columns = 0
 elif menu_selection == 2:
-  num_columns = input_normalized('Escribe cuántas columnas quieres usar: ',[1,19])
+  num_columns = input_normalized('Escribe cuántas columnas quieres usar solo se pueden usar del 2 al 19: ',[1,19])
 
 matrix = read_data('segmentation_paper.csv', num_columns)
 matrix = np.array(matrix,dtype = 'float64')
@@ -37,7 +37,7 @@ length_df = len(matrix[0])
 max_rows_sample = 10
 
 print("Se ha leído el dataset..")
-number_centroids = input_normalized('Ingresa el numero de centros a usar: ',[1,max_rows_sample ])
+number_centroids = input_normalized('Ingresa el numero de centros a usar: Solo se pueden usar de 2 a 10',[1,max_rows_sample ])
 
 norm_matrix = normalize(matrix)
 
