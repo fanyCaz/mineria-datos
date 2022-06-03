@@ -12,6 +12,7 @@ def read_data(file_name, number_columns,type_sep):
   debug = False
   try:
     matrix = pd.read_csv(file_name, sep=type_sep)
+    data_types_count = matrix['variety'].unique().size
     if number_columns == 0:
       # complete numerical values
       #matrix = matrix.select_dtypes('number')
@@ -21,7 +22,7 @@ def read_data(file_name, number_columns,type_sep):
       #matrix = matrix[['REGION-CENTROID-COL','REGION-CENTROID-ROW','REGION-PIXEL-COUNT','SHORT-LINE-DENSITY-5','SHORT-LINE-DENSITY-2','VEDGE-MEAN']]
   except:
     raise FileNotFoundError
-  return matrix
+  return matrix,data_types_count
 
 print("Refinamiento de centros para k-means")
 print("Antes de comenzar, responde lo siguiente:")
@@ -31,13 +32,13 @@ if menu_selection == 1:
 elif menu_selection == 2:
   num_columns = input_normalized('Escribe cuántas columnas quieres usar solo se pueden usar del 2 al 7: ',[1,7])
 
-matrix = read_data('seeds_dataset.txt', num_columns,'\t')
+matrix,data_types_count = read_data('seeds_dataset.txt', num_columns,'\t')
 matrix = np.array(matrix,dtype = 'float64')
 length_df = len(matrix[0])
 max_rows_sample = 10
 
 print("Se ha leído el dataset..")
-number_centroids = input_normalized('Ingresa el numero de centros a usar: Solo se pueden usar de 2 a 10: ',[1,max_rows_sample ])
+number_centroids = input_normalized(f'Ingresa el numero de centros a usar: Solo se pueden usar de 2 a {data_types_count}: ',[1,data_types_count])
 
 norm_matrix = normalize(matrix)
 print_norm_matrix('matriz_normalizada',norm_matrix)
