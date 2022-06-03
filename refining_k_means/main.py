@@ -23,10 +23,12 @@ def select_columns(number_columns, matrix, dataset_name):
   }
   data = datasets[dataset_name]['data']
   if number_columns == 0:
-    return data, datasets[dataset_name]['types_count']
+    matrix = data
+    types_count = datasets[dataset_name]['types_count']
   else:
     matrix = data.iloc[:,:number_columns]
-  return matrix, datasets[dataset_name]['types_count']
+    types_count = matrix.columns.size
+  return matrix, types_count
 
 def read_data(file_name):
   matrix = []
