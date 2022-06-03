@@ -85,7 +85,7 @@ column_names = ["id", "num_centroids", "num_variables", "result_pre_refining", "
                 "distortion_fm"]
 results = pd.DataFrame()
 index = 1
-for num_run in range(0, 1):
+for num_run in range(0, 3):
     for num_centroids in range(2, 11):
         for num_variables in range(2, 20):
             matrix = read_data('segmentation_paper.csv', num_variables)

@@ -36,7 +36,7 @@ length_df = len(matrix[0])
 max_rows_sample = 10
 
 print("Se ha leído el dataset..")
-number_centroids = input_normalized('Ingresa el numero de centros a usar: Solo se pueden usar de 2 a 10',[1,max_rows_sample ])
+number_centroids = input_normalized('Ingresa el numero de centros a usar: Solo se pueden usar de 2 a 10: ',[1,max_rows_sample ])
 
 norm_matrix = normalize(matrix)
 
