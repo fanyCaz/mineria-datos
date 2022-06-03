@@ -4,52 +4,70 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import math
+import os
 from datetime import datetime
 from utils import generador, input_normalized, imprimir_matriz, print_norm_matrix
+# 'types_count': dataset.columns[2:].size, 'data': dataset
+#  'types_count': dataset['variety'].unique().size, 'data': dataset.iloc[:,:-1]
+def get_data_specifics(dataset_name):
+  datasets = {
+    'seeds_dataset': { 'csv': 'dataset/seeds_dataset.txt', 'sep': '\t' },
+    'abs_work': { 'csv': 'dataset/abs_work.csv', 'sep': ';' }
+  }
+  return datasets[dataset_name]
 
-def read_data(file_name, number_columns,type_sep):
+def select_columns(number_columns, matrix, dataset_name):
+  datasets = {
+    'seeds_dataset': { 'types_count': matrix.columns[:-1].size, 'data': matrix.iloc[:,:-1] },
+    'abs_work': { 'types_count': matrix.columns[2:].size, 'data': matrix.iloc[:,2:] }
+  }
+  data = datasets[dataset_name]['data']
+  if number_columns == 0:
+    return data, datasets[dataset_name]['types_count']
+  else:
+    matrix = data.iloc[:,:number_columns]
+  return matrix, datasets[dataset_name]['types_count']
+
+def read_data(file_name):
   matrix = []
-  debug = False
   try:
-    matrix = pd.read_csv(file_name, sep=type_sep)
-    data_types_count = matrix['variety'].unique().size
-    if number_columns == 0:
-      # complete numerical values
-      #matrix = matrix.select_dtypes('number')
-      matrix = matrix.iloc[:,:-1]
-    else:
-      matrix = matrix.iloc[:,1:number_columns]
-      #matrix = matrix[['REGION-CENTROID-COL','REGION-CENTROID-ROW','REGION-PIXEL-COUNT','SHORT-LINE-DENSITY-5','SHORT-LINE-DENSITY-2','VEDGE-MEAN']]
+    meta_data = get_data_specifics(file_name)
+    matrix = pd.read_csv(meta_data['csv'], sep=meta_data['sep'])
   except:
     raise FileNotFoundError
-  return matrix,data_types_count
+  return matrix, matrix.columns.size
 
+time_now = datetime.now().strftime("%d%B%Y_%I_%M")
 print("Refinamiento de centros para k-means")
+dataset_name = 'seeds_dataset'
+matrix, length_df = read_data(dataset_name)
+
+print("Se ha leído el dataset..")
 print("Antes de comenzar, responde lo siguiente:")
-menu_selection = input_normalized('1. Quiero usar toda la base de datos\n 2. Quiero solo usar algunas columnas\n->',[1,2])
+menu_selection = input_normalized('1. Quiero usar toda la base de datos\n2. Quiero solo usar algunas columnas\n->',[1,2])
+
 if menu_selection == 1:
   num_columns = 0
 elif menu_selection == 2:
-  num_columns = input_normalized('Escribe cuántas columnas quieres usar solo se pueden usar del 2 al 7: ',[1,7])
+  num_columns = input_normalized(f'Escribe cuántas columnas quieres usar solo se pueden usar del 2 al {length_df}: ',[2,length_df])
 
-matrix,data_types_count = read_data('seeds_dataset.txt', num_columns,'\t')
+matrix, data_types_count = select_columns(num_columns, matrix, dataset_name)
+
 matrix = np.array(matrix,dtype = 'float64')
-length_df = len(matrix[0])
-max_rows_sample = 10
-
-print("Se ha leído el dataset..")
-number_centroids = input_normalized(f'Ingresa el numero de centros a usar: Solo se pueden usar de 2 a {data_types_count}: ',[1,data_types_count])
 
 norm_matrix = normalize(matrix)
+max_rows_sample = 10
 print_norm_matrix('matriz_normalizada',norm_matrix)
-centers = generador(number_centroids, length_df)
+number_centroids = input_normalized(f'Ingresa el numero de centros a usar: Solo se pueden usar de 2 a {data_types_count}: ',[2,data_types_count])
+number_coordinates = len(matrix[0])
+centers = generador(number_centroids, number_coordinates)
 k = len(centers)
 
 print("Primero se refinarán los centros")
 number_subsamples = 10
 refined_centers, _, _ = refine(centers,norm_matrix,k,number_subsamples,max_rows_sample)
-imprimir_matriz(f'centros_refinados_{number_centroids}',refined_centers)
-time_now = datetime.now().strftime("%d%B%Y_%I_%M")
+
+imprimir_matriz(f'centros_refinados_{number_centroids}_{time_now}',refined_centers)
 elements, centers, j_objective, belonging,s_elements = kmeans(norm_matrix,refined_centers)
 imprimir_matriz(f'elementos_refinados_{time_now}',s_elements,f'Objetivo logrado: {j_objective}')
 print(f'Objetivo logrado con refinamiento: {j_objective}')
