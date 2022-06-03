@@ -125,5 +125,7 @@ def distortion(k_solution, smooth_solution):
     best_centers = smooth_solution[min_distortion_cm_idx]['centers']
   else:
     best_centers = smooth_solution[min_distortion_fm_idx]['centers']
+  imprimir_matriz('distorsion_fm', distortions_fm)
+  imprimir_matriz('distorsion_cm', distortions_cm)
 
   return best_centers, distortions_cm[min_distortion_cm_idx], distortions_fm[min_distortion_fm_idx]
