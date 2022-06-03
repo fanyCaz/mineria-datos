@@ -5,16 +5,16 @@ import matplotlib.pyplot as plt
 import math
 import sys
 
-def centroids_belonging(belonging: list):
+def centroids_belonging(belonging: list,distances):
   identifiers = ['A','B','C','D','E','F','G','H','I','J'] 
   elements = {}
   for idx,element in enumerate(belonging):
-    index = np.argmax(element)
+    centroid_number = np.argmax(element)
     try:
-      elements[index].append(identifiers[idx])
+      elements[centroid_number].append({'idx':idx})
     except:
-      elements[index] = []
-      elements[index].append(identifiers[idx])
+      elements[centroid_number] = []
+      elements[centroid_number].append({'idx':idx})
   return elements
 
 def kmeans(norm_matrix,centers):
@@ -32,17 +32,18 @@ def kmeans(norm_matrix,centers):
   print("Los centros son:")
   print(centers)
 
-  elements = centroids_belonging(belonging)
+  elements = centroids_belonging(belonging, distances)
   print("Elementos de cada centroide")
   print(elements)
 
-matrix = pd.read_csv('hoax.csv')
+matrix = pd.read_csv('examen_2.csv')
 matrix = np.array(matrix)
 norm_matrix = normalize(matrix)
-#centers = np.array([[0,0],[1,1]])
+centers = np.array([[0,0],[1,1]])
 #centers = np.array([[0,0],[1,1],[0.5,0.5]])
 #centers = np.array([[0,0],[1,1],[0,1],[1,0]])
 #centers = np.array([[0,0],[1,1],[0,1],[1,0],[0.5,0.5]])
-centers = np.array([[0,0],[1,1],[0,1],[1,0],[0.5,0.5],[0.2,0.2]])
+centers = np.array([[0,0,0,0],[1,1,1,1],[0,1,1,1],[1,0,1,0]])
 
+print( [ len(center) for center in centers])
 kmeans(norm_matrix,centers)
