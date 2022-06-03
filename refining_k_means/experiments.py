@@ -91,7 +91,7 @@ for num_centroids in range(2, 11):
            f"{mean_improv_dist:.3f} % para la distorsion para {num_centroids} centroides"
     lines.append(line)
 
-for num_variables in range(2, 20):
+for num_variables in range(2, 8):
     df_vars = df_all.loc[df_all.num_variables == num_variables]
     mean_improv_obj = df_vars.rel_improv_obj.mean()
     mean_improv_dist = df_vars.rel_improv_dist.mean()
