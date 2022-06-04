@@ -66,61 +66,49 @@ for num_run in range(0, 5):
         # imprimir_matriz('centros_refinados',refined_centers)
         elements, centers, objective_pre, belonging, s_elements = kmeans(norm_matrix, centers)
         if num_centroids == 3:
-            ceros1 = np.zeros(210)
+            ceros1 = np.zeros(210).astype(int)
             try:
-                clase1 = s_elements[0]
-                for item in clase1:
-                    ceros1[item] = 1  # clase 1
-                clase2 = s_elements[1]
-                for item in clase2:
-                    ceros1[item] = 2  # clase 2
-                clase3 = s_elements[2]
-                for item in clase3:
-                    ceros1[item] = 3  # clase 3
-                df = pd.read_csv('seeds_dataset.txt', sep='\t')
-                salida = df['variety'].to_numpy()
-                cm = confusion_matrix(salida, ceros1)
-                print(cm)
-                """
-                cmd = ConfusionMatrixDisplay(cm, display_labels=['Karma', 'Rosa', 'Canadian'])
-                plot = cmd.plot()
-                plot.ax_.set_title("Matriz de confusion centros sin refinar")
-                cmd.plot()
-                plt.savefig(f"matriz_conf_sinref_{num_variables}vars_{num_run}run.png")
-                """
+                if len(s_elements.keys()) == 3:
+                    for key in sorted(s_elements.keys()):
+                        print(key)
+                        for elem in s_elements[key]:
+                            ceros1[elem] = key + 1
+                    df = pd.read_csv('seeds_dataset.txt', sep='\t')
+                    salida = df['variety'].to_numpy().astype(int)
+                    cm = confusion_matrix(salida, ceros1)
+                    print(cm)
+                    tp_karma_pre = cm[0][0]
+                    fn_karma_pre = cm[0][1] + cm[0][2]  # same row
+                    fp_karma_pre = cm[1][0] + cm[2][0]  # same col
+                    tn_karma_pre = cm[1][1] + cm[1][2] + cm[2][1] + cm[2][2]
+                    N = tp_karma_pre + fn_karma_pre + fp_karma_pre + tn_karma_pre
+                    error_karma_pre = (fp_karma_pre + fn_karma_pre) / N
+                    acc_karma_pre = (tp_karma_pre + tn_karma_pre) / N
 
-                tp_karma_pre = cm[0][0]
-                fn_karma_pre = cm[0][1] + cm[0][2]  # same row
-                fp_karma_pre = cm[1][0] + cm[2][0]  # same col
-                tn_karma_pre = cm[1][1] + cm[1][2] + cm[2][1] + cm[2][2]
-                N = tp_karma_pre + fn_karma_pre + fp_karma_pre + tn_karma_pre
-                error_karma_pre = (fp_karma_pre + fn_karma_pre) / N
-                acc_karma_pre = (tp_karma_pre + tn_karma_pre) / N
+                    resultados_error_karma_pre.append(error_karma_pre)
+                    resultados_acc_karma_pre.append(acc_karma_pre)
 
-                resultados_error_karma_pre.append(error_karma_pre)
-                resultados_acc_karma_pre.append(acc_karma_pre)
+                    tp_rosa_pre = cm[1][1]
+                    fn_rosa_pre = cm[1][0] + cm[1][2]  # same row
+                    fp_rosa_pre = cm[0][1] + cm[0][1]  # same col
+                    tn_rosa_pre = cm[0][0] + cm[0][2] + cm[2][0] + cm[2][2]
+                    N = tp_rosa_pre + fn_rosa_pre + fp_rosa_pre + tn_rosa_pre
+                    error_rosa_pre = (fp_rosa_pre + fn_rosa_pre) / N
+                    acc_rosa_pre = (tp_rosa_pre + tn_rosa_pre) / N
 
-                tp_rosa_pre = cm[1][1]
-                fn_rosa_pre = cm[1][0] + cm[1][2]  # same row
-                fp_rosa_pre = cm[0][1] + cm[0][1]  # same col
-                tn_rosa_pre = cm[0][0] + cm[0][2] + cm[2][0] + cm[2][2]
-                N = tp_rosa_pre + fn_rosa_pre + fp_rosa_pre + tn_rosa_pre
-                error_rosa_pre = (fp_rosa_pre + fn_rosa_pre) / N
-                acc_rosa_pre = (tp_rosa_pre + tn_rosa_pre) / N
+                    resultados_error_rosa_pre.append(error_rosa_pre)
+                    resultados_acc_rosa_pre.append(acc_rosa_pre)
 
-                resultados_error_rosa_pre.append(error_rosa_pre)
-                resultados_acc_rosa_pre.append(acc_rosa_pre)
+                    tp_can_pre = cm[2][2]
+                    fn_can_pre = cm[2][0] + cm[2][1]  # same row
+                    fp_can_pre = cm[0][2] + cm[1][2]  # same col
+                    tn_can_pre = cm[0][0] + cm[0][1] + cm[1][0] + cm[1][1]
+                    N = tp_can_pre + fn_can_pre + fp_can_pre + tn_can_pre
+                    error_can_pre = (fp_can_pre + fn_can_pre) / N
+                    acc_can_pre = (tp_can_pre + tn_can_pre) / N
 
-                tp_can_pre = cm[2][2]
-                fn_can_pre = cm[2][0] + cm[2][1]  # same row
-                fp_can_pre = cm[0][2] + cm[1][2]  # same col
-                tn_can_pre = cm[0][0] + cm[0][1] + cm[1][0] + cm[1][1]
-                N = tp_can_pre + fn_can_pre + fp_can_pre + tn_can_pre
-                error_can_pre = (fp_can_pre + fn_can_pre) / N
-                acc_can_pre = (tp_can_pre + tn_can_pre) / N
-
-                resultados_error_can_pre.append(error_can_pre)
-                resultados_acc_can_pre.append(acc_can_pre)
+                    resultados_error_can_pre.append(error_can_pre)
+                    resultados_acc_can_pre.append(acc_can_pre)
             except:
                 print("")
 
@@ -132,61 +120,51 @@ for num_run in range(0, 5):
 
 
         if num_centroids == 3:
-            ceros2 = np.zeros(210)
+            ceros2 = np.zeros(210).astype(int)
             try:
-                clase1 = s_elements2[0]
-                for item in clase1:
-                    ceros2[item] = 1  # clase 1
-                clase2 = s_elements2[1]
-                for item in clase2:
-                    ceros2[item] = 2  # clase 2
-                clase3 = s_elements2[2]
-                for item in clase3:
-                    ceros2[item] = 3  # clase 3
-                df = pd.read_csv('seeds_dataset.txt', sep='\t')
-                salida = df['variety'].to_numpy()
-                cm2 = confusion_matrix(salida, ceros2)
-                print(cm2)
-                """
-                cmd2 = ConfusionMatrixDisplay(cm2, display_labels=['Karma', 'Rosa', 'Canadian'])
-                plot2 = cmd2.plot()
-                plot2.ax_.set_title("Matriz de confusion centros refinados")
-                cmd2.plot()
-                plt.savefig(f"matriz_conf_refinados_{num_variables}vars_{num_run}run.png")
-                """
+                if len(s_elements2.keys()) == 3:
+                    for key in sorted(s_elements2.keys()):
+                        for elem in s_elements2[key]:
+                            ceros2[elem] = key + 1
 
-                tp_karma_post = cm2[0][0]
-                fn_karma_post = cm2[0][1] + cm2[0][2]  # same row
-                fp_karma_post = cm2[1][0] + cm2[2][0]  # same col
-                tn_karma_post = cm2[1][1] + cm2[1][2] + cm2[2][1] + cm2[2][2]
-                N = tp_karma_post + fn_karma_post + fp_karma_post + tn_karma_post
-                error_karma_post = (fp_karma_post + fn_karma_post) / N
-                acc_karma_post = (tp_karma_post + tn_karma_post) / N
+                    df = pd.read_csv('seeds_dataset.txt', sep='\t')
+                    salida = df['variety'].to_numpy()
+                    #print(ceros2)
+                    #print(salida)
+                    cm2 = confusion_matrix(salida, ceros2)
+                    print(cm2)
+                    tp_karma_post = cm2[0][0]
+                    fn_karma_post = cm2[0][1] + cm2[0][2]  # same row
+                    fp_karma_post = cm2[1][0] + cm2[2][0]  # same col
+                    tn_karma_post = cm2[1][1] + cm2[1][2] + cm2[2][1] + cm2[2][2]
+                    N = tp_karma_post + fn_karma_post + fp_karma_post + tn_karma_post
+                    error_karma_post = (fp_karma_post + fn_karma_post) / N
+                    acc_karma_post = (tp_karma_post + tn_karma_post) / N
 
-                resultados_error_karma_post.append(error_karma_post)
-                resultados_acc_karma_post.append(acc_karma_post)
+                    resultados_error_karma_post.append(error_karma_post)
+                    resultados_acc_karma_post.append(acc_karma_post)
 
-                tp_rosa_post = cm2[1][1]
-                fn_rosa_post = cm2[1][0] + cm2[1][2]  # same row
-                fp_rosa_post = cm2[0][1] + cm2[0][1]  # same col
-                tn_rosa_post = cm2[0][0] + cm2[0][2] + cm2[2][0] + cm2[2][2]
-                N = tp_rosa_post + fn_rosa_post + fp_rosa_post + tn_rosa_post
-                error_rosa_post = (fp_rosa_post + fn_rosa_post) / N
-                acc_rosa_post = (tp_rosa_post + tn_rosa_post) / N
+                    tp_rosa_post = cm2[1][1]
+                    fn_rosa_post = cm2[1][0] + cm2[1][2]  # same row
+                    fp_rosa_post = cm2[0][1] + cm2[0][1]  # same col
+                    tn_rosa_post = cm2[0][0] + cm2[0][2] + cm2[2][0] + cm2[2][2]
+                    N = tp_rosa_post + fn_rosa_post + fp_rosa_post + tn_rosa_post
+                    error_rosa_post = (fp_rosa_post + fn_rosa_post) / N
+                    acc_rosa_post = (tp_rosa_post + tn_rosa_post) / N
 
-                resultados_error_rosa_post.append(error_rosa_post)
-                resultados_acc_rosa_post.append(acc_rosa_post)
+                    resultados_error_rosa_post.append(error_rosa_post)
+                    resultados_acc_rosa_post.append(acc_rosa_post)
 
-                tp_can_post = cm2[2][2]
-                fn_can_post = cm2[2][0] + cm2[2][1]  # same row
-                fp_can_post = cm2[0][2] + cm2[1][2]  # same col
-                tn_can_post = cm2[0][0] + cm2[0][1] + cm2[1][0] + cm2[1][1]
-                N = tp_can_post + fn_can_post + fp_can_post + tn_can_post
-                error_can_post = (fp_can_post + fn_can_post) / N
-                acc_can_post = (tp_can_post + tn_can_post) / N
+                    tp_can_post = cm2[2][2]
+                    fn_can_post = cm2[2][0] + cm2[2][1]  # same row
+                    fp_can_post = cm2[0][2] + cm2[1][2]  # same col
+                    tn_can_post = cm2[0][0] + cm2[0][1] + cm2[1][0] + cm2[1][1]
+                    N = tp_can_post + fn_can_post + fp_can_post + tn_can_post
+                    error_can_post = (fp_can_post + fn_can_post) / N
+                    acc_can_post = (tp_can_post + tn_can_post) / N
 
-                resultados_error_can_post.append(error_can_post)
-                resultados_acc_can_post.append(acc_can_post)
+                    resultados_error_can_post.append(error_can_post)
+                    resultados_acc_can_post.append(acc_can_post)
             except:
                 print("")
 
