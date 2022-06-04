@@ -16,7 +16,6 @@ def calculate_distances(matrix, centers) -> list:
         temp = []
         for center in centers:
             dist = math.dist(row, center)
-
             temp.append(dist)
         distances.append(temp)
     distances = np.array(distances)

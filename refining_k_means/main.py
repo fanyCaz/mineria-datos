@@ -45,6 +45,7 @@ dataset_name = 'seeds_dataset'
 matrix, length_df = read_data(dataset_name)
 
 print("Se ha leído el dataset..")
+"""
 print("Antes de comenzar, responde lo siguiente:")
 menu_selection = input_normalized('1. Quiero usar toda la base de datos\n2. Quiero solo usar algunas columnas\n->',[1,2])
 
@@ -52,14 +53,15 @@ if menu_selection == 1:
   num_columns = 0
 elif menu_selection == 2:
   num_columns = input_normalized(f'Escribe cuántas columnas quieres usar solo se pueden usar del 2 al {length_df}: ',[2,length_df])
-
+"""
+num_columns = 0
 matrix, data_types_count = select_columns(num_columns, matrix, dataset_name)
 
 matrix = np.array(matrix,dtype = 'float64')
 
 norm_matrix = normalize(matrix)
 max_rows_sample = 10
-print_norm_matrix('matriz_normalizada',norm_matrix)
+#print_norm_matrix('matriz_normalizada',norm_matrix)
 number_centroids = input_normalized(f'Ingresa el numero de centros a usar: Solo se pueden usar de 2 a {data_types_count}: ',[2,data_types_count])
 number_coordinates = len(matrix[0])
 centers = generador(number_centroids, number_coordinates)
@@ -69,11 +71,12 @@ print("Primero se refinarán los centros")
 number_subsamples = 10
 refined_centers, _, _ = refine(centers,norm_matrix,k,number_subsamples,max_rows_sample)
 
-imprimir_matriz(f'centros_refinados_{number_centroids}_{time_now}',refined_centers)
-elements, centers, j_objective, belonging,s_elements = kmeans(norm_matrix,refined_centers)
-imprimir_matriz(f'elementos_refinados_{time_now}',s_elements,f'Objetivo logrado: {j_objective}')
+#imprimir_matriz(f'centros_refinados_{number_centroids}_{time_now}',refined_centers)
+elements, centers, j_objective, belonging,s_elements = kmeans(norm_matrix,refined_centers,list(range(0,len(matrix))))
+#imprimir_matriz(f'elementos_refinados_{time_now}',s_elements,f'Objetivo logrado: {j_objective}')
 print(f'Objetivo logrado con refinamiento: {j_objective}')
-elements, centers, j_objective, belonging,s_elements = kmeans(norm_matrix,centers)
+print(f"elementos simples:\n{s_elements}")
+elements, centers, j_objective, belonging,s_elements = kmeans(norm_matrix,centers,list(range(0,len(matrix))))
 print(f'Objetivo logrado sin refinamiento: {j_objective}')
-imprimir_matriz(f'elementos_no_refinados_{time_now}',s_elements,f'Objetivo logrado: {j_objective}')
-
+#imprimir_matriz(f'elementos_no_refinados_{time_now}',s_elements,f'Objetivo logrado: {j_objective}')
+print(f"elementos simples:\n{s_elements}")

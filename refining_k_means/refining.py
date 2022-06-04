@@ -9,9 +9,11 @@ def refine(initial_start_point, data, k, num_subsamples=4, max_rows=10):
   cm = []
   #print(f'centros iniciales \n{initial_start_point}')
   centers = initial_start_point
+  used_data = []
   for i in range(num_subsamples):
-    s_i = get_subsample(data,max_rows)
-    elements, centers, j_obj, belonging, s_elements = kmeansMod(centers,s_i,k)
+    s_i,used_indexes = get_subsample(data,max_rows)
+    used_data.append(used_indexes)
+    elements, centers, j_obj, belonging, s_elements = kmeansMod(centers,s_i,k,used_indexes)
     save = {'elements': s_i, 'centers': centers}
     cm.append(save)
   #idx_min_distortion,min_distortion = distortion(cm)
@@ -22,7 +24,8 @@ def refine(initial_start_point, data, k, num_subsamples=4, max_rows=10):
   #print(cm)
   for j in range(num_subsamples):
     centers = cm[j]['centers']
-    elements, centers, j_obj, belonging, s_elements = kmeans(cm[j]['elements'],centers)
+    used_indexes = used_data[j]
+    elements, centers, j_obj, belonging, s_elements = kmeans(cm[j]['elements'],centers,used_indexes)
     save = {'elements': cm[j]['elements'], 'centers': centers}
     fms.append(save)
   #print("resultados despues")
@@ -37,9 +40,9 @@ def refine(initial_start_point, data, k, num_subsamples=4, max_rows=10):
 def get_subsample(data,num_elements):
   rand_elements = np.random.choice(data.shape[0], num_elements,replace=False)
   sample = data[rand_elements]
-  return sample
+  return sample,rand_elements
 
-def kmeans(norm_matrix,centers):
+def kmeans(norm_matrix,centers,indexes_data):
   j_objective = 0
   j_ant = sys.maxsize
   belonging = []
@@ -52,10 +55,10 @@ def kmeans(norm_matrix,centers):
       break
     else:
       j_ant = j_objective
-  elements, s_elements = centroids_belonging(belonging, distances)
+  elements, s_elements = centroids_belonging(belonging, distances,indexes_data)
   return elements, centers, j_objective, belonging, s_elements
 
-def kmeansMod(start_point,sample,k):
+def kmeansMod(start_point,sample,k,indexes_data):
   j_objective = 0
   j_ant = sys.maxsize
   belonging = []
@@ -66,14 +69,14 @@ def kmeansMod(start_point,sample,k):
     distances = calculate_distances(sample,centers)
     centers, j_objective, belonging = new_centroids(distances,centers,sample,j_ant)
     if math.isclose(j_objective,j_ant,rel_tol=0.0001):
-      elements, s_elements = centroids_belonging(belonging, distances)
+      elements, s_elements = centroids_belonging(belonging, distances, indexes_data)
       empty_cluster = len(elements) != len(centers) # asking if not all clusters has elements
       if empty_cluster:
         centers = update_empty_centers(centers,belonging,elements,sample)
       break
     else:
       j_ant = j_objective
-  elements, s_elements = centroids_belonging(belonging, distances)
+  elements, s_elements = centroids_belonging(belonging, distances,indexes_data)
   return elements, centers, j_objective, belonging, s_elements
 
 def update_empty_centers(centers, belonging,elements,sample):
@@ -94,20 +97,20 @@ def update_empty_centers(centers, belonging,elements,sample):
       break
   return centers
 
-def centroids_belonging(belonging: list, distances: list):
+def centroids_belonging(belonging: list, distances: list, indexes_data: list):
   identifiers = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V']
   elements = {}
   simplified_elements = {}
   for idx,element in enumerate(belonging):
     centroid_number = np.argmax(element)
     try:
-      elements[centroid_number].append({'idx':idx, 'distance': np.min(distances[idx]) })
-      simplified_elements[centroid_number].append(idx)
+      elements[centroid_number].append({'idx':idx, 'distance': np.min(distances[idx]), 'iid': indexes_data[idx] })
+      simplified_elements[centroid_number].append(indexes_data[idx])
     except:
       elements[centroid_number] = []
-      elements[centroid_number].append({'idx':idx, 'distance': np.min(distances[idx]) })
+      elements[centroid_number].append({'idx':idx, 'distance': np.min(distances[idx]), 'iid': indexes_data[idx] })
       simplified_elements[centroid_number] = []
-      simplified_elements[centroid_number].append(idx)
+      simplified_elements[centroid_number].append(indexes_data[idx])
   return elements, simplified_elements
 
 def distortion(k_solution, smooth_solution):
