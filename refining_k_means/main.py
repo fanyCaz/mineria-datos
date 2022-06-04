@@ -12,14 +12,16 @@ from utils import generador, input_normalized, imprimir_matriz, print_norm_matri
 def get_data_specifics(dataset_name):
   datasets = {
     'seeds_dataset': { 'csv': 'dataset/seeds_dataset.txt', 'sep': '\t' },
-    'abs_work': { 'csv': 'dataset/abs_work.csv', 'sep': ';' }
+    'abs_work': { 'csv': 'dataset/abs_work.csv', 'sep': ';' },
+    'vehicle': {'csv': 'dataset/vehicle_s.csv', 'sep': ',' }
   }
   return datasets[dataset_name]
 
 def select_columns(number_columns, matrix, dataset_name):
   datasets = {
     'seeds_dataset': { 'types_count': matrix.columns[:-1].size, 'data': matrix.iloc[:,:-1] },
-    'abs_work': { 'types_count': matrix.columns[2:].size, 'data': matrix.iloc[:,2:] }
+    'abs_work': { 'types_count': matrix.columns[2:].size, 'data': matrix.iloc[:,2:] },
+    'vehicle': { 'types_count': matrix.columns[:-1].size, 'data': matrix.iloc[:,:-1] }
   }
   data = datasets[dataset_name]['data']
   if number_columns == 0:
@@ -41,7 +43,7 @@ def read_data(file_name):
 
 time_now = datetime.now().strftime("%d%B%Y_%I_%M")
 print("Refinamiento de centros para k-means")
-dataset_name = 'seeds_dataset'
+dataset_name = 'vehicle'
 matrix, length_df = read_data(dataset_name)
 
 print("Se ha leído el dataset..")
@@ -75,8 +77,6 @@ refined_centers, _, _ = refine(centers,norm_matrix,k,number_subsamples,max_rows_
 elements, centers, j_objective, belonging,s_elements = kmeans(norm_matrix,refined_centers,list(range(0,len(matrix))))
 #imprimir_matriz(f'elementos_refinados_{time_now}',s_elements,f'Objetivo logrado: {j_objective}')
 print(f'Objetivo logrado con refinamiento: {j_objective}')
-print(f"elementos simples:\n{s_elements}")
 elements, centers, j_objective, belonging,s_elements = kmeans(norm_matrix,centers,list(range(0,len(matrix))))
 print(f'Objetivo logrado sin refinamiento: {j_objective}')
 #imprimir_matriz(f'elementos_no_refinados_{time_now}',s_elements,f'Objetivo logrado: {j_objective}')
-print(f"elementos simples:\n{s_elements}")
